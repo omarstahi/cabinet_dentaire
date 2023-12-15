@@ -1,4 +1,4 @@
-package models.antecedantClasses;
+package models.consultation;
 
 public enum TypeConsultation {
 }

@@ -1,11 +1,6 @@
 package UI.sec;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import models.Patient;
-import services.ServiceSec;
 
 public class SecDash extends JFrame {
 /*

@@ -1,4 +1,4 @@
-package models;
+package models.acte;
 
 public class Acte {
 }

@@ -1,4 +1,4 @@
-package models;
+package models.consultation;
 
 public class Consultation {
 }
