@@ -8,7 +8,7 @@ public class ServiceSec {
 
     public void add(Patient patient) {
         // Assign an ID to the patient before adding
-        patient.setId(patients.size() + 1);
+        //patient.setId(patients.size() + 1);
         patients.add(patient);
     }
 
