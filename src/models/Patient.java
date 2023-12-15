@@ -12,6 +12,17 @@ public class Patient extends Personne {
     Mutuelle mutuelle;
     ArrayList<AntecedantMedical> AntecedantMedicaux;
 
+    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, LocalDate dateNaissance, Mutuelle mutuelle, ArrayList<AntecedantMedical> antecedantMedicaux) {
+        super(nom, prenom, adresse, telephone, email, cin);
+        this.dateNaissance = dateNaissance;
+        this.mutuelle = mutuelle;
+        AntecedantMedicaux = antecedantMedicaux;
+    }
+
+    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin) {
+        super(nom, prenom, adresse, telephone, email, cin);
+    }
+
 
     public LocalDate getDateNaissance() {
         return dateNaissance;
