@@ -24,6 +24,7 @@ public class ContentPanel extends JPanel {
         repaint();
     }
 
+
     public void caisseContent(JComponent component) {
         removeAll();
         revalidate();
