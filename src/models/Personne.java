@@ -2,6 +2,7 @@ package models;
 
 public class Personne{
     private Long id;
+    private static Long index = 0L;
     private String nom, prenom, adresse, telephone, email, cin;
 
     public Long getId() {
@@ -9,6 +10,7 @@ public class Personne{
     }
 
     public Personne(String nom, String prenom, String adresse, String telephone, String email, String cin) {
+        setId();
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
@@ -17,8 +19,8 @@ public class Personne{
         this.cin = cin;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId() {
+        this.id = index++;
     }
 
     public String getNom() {
