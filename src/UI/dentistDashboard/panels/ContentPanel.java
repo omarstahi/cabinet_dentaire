@@ -10,14 +10,14 @@ public class ContentPanel extends JPanel {
         setLayout(new BorderLayout());
     }
 
-    public void profileContent(JComponent component) {
+    public void profileContent() {
         removeAll();
         add(new JButton(), BorderLayout.CENTER);
         add(new JCheckBox(), BorderLayout.NORTH);
         revalidate();
         repaint();
     }
-    public void patientContent(JComponent component) {
+    public void patientContent() {
         removeAll();
         add(new JTable(5,5), BorderLayout.CENTER);
         revalidate();
@@ -25,7 +25,7 @@ public class ContentPanel extends JPanel {
     }
 
 
-    public void caisseContent(JComponent component) {
+    public void caisseContent() {
         removeAll();
         revalidate();
         repaint();

@@ -21,7 +21,7 @@ public class DentistDashboard extends JFrame {
 
         // Add text
         JLabel titleLabel = new JLabel("Dashboard Title");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
         topPanel.add(iconLabel, BorderLayout.WEST);
         topPanel.add(titleLabel, BorderLayout.CENTER);
