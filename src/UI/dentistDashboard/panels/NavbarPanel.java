@@ -22,11 +22,13 @@ public class NavbarPanel extends JPanel {
 
         JButton profileButton = new JButton("<html><font color='white'>Profile</font></html>", resizeIcon(new ImageIcon("src/Static/icons/profile.png"), 40, 40));
         profileButton.setPreferredSize(new Dimension(150, 40)); // Adjust the size as needed
-        JButton patientButton = new JButton("<html><font color='white'>Patients</font></html>");
+        profileButton.setFont(Themes.DEFAULTFONT);
+        JButton patientButton = new JButton("<html><font color='white'>Patients</font></html>", new ImageIcon("src/Static/icons/patient.png"));
         patientButton.setPreferredSize(new Dimension(150, 40)); // Adjust the size as needed
+        patientButton.setFont(Themes.DEFAULTFONT);
         JButton caisseButton = new JButton("<html><font color='white'>Caisse</font></html>", resizeIcon(new ImageIcon("src/Static/icons/caisse.png"), 40, 40));
         caisseButton.setPreferredSize(new Dimension(150, 40)); // Adjust the size as needed
-
+        caisseButton.setFont(Themes.DEFAULTFONT);
         profileButton.setContentAreaFilled(false);
         patientButton.setContentAreaFilled(false);
         caisseButton.setContentAreaFilled(false);

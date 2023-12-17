@@ -1,9 +1,10 @@
 package models;
 
-public class User{
+public class User extends Personne{
     private String username, password;
 
-    public User(String username, String password) {
+    public User(String nom, String prenom, String adresse, String telephone, String email, String cin, String username, String password) {
+        super(nom, prenom, adresse, telephone, email, cin);
         this.username = username;
         this.password = password;
     }

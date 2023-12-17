@@ -11,12 +11,12 @@ public class Secretaire extends User{
     private StatusEmploye statusEmploye;
     private Double prime;
 
-    public Secretaire(String username, String password) {
-        super(username, password);
+    public Secretaire(String nom, String prenom, String adresse, String telephone, String email, String cin, String username, String password) {
+        super(nom, prenom, adresse, telephone, email, cin, username, password);
     }
 
-    public Secretaire(String username, String password, Double salaireDeBase, LocalDate dateDeRetoure, Assurance assurance, StatusEmploye statusEmploye, Double prime) {
-        super(username, password);
+    public Secretaire(String nom, String prenom, String adresse, String telephone, String email, String cin, String username, String password, Double salaireDeBase, LocalDate dateDeRetoure, Assurance assurance, StatusEmploye statusEmploye, Double prime) {
+        super(nom, prenom, adresse, telephone, email, cin, username, password);
         SalaireDeBase = salaireDeBase;
         this.dateDeRetoure = dateDeRetoure;
         this.assurance = assurance;

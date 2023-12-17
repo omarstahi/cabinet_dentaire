@@ -1,13 +1,18 @@
 package UI.dentistDashboard;
 
+import Static.Themes;
 import UI.dentistDashboard.panels.ContentPanel;
 import UI.dentistDashboard.panels.NavbarPanel;
+
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class DentistDashboard extends JFrame {
     public DentistDashboard() {
-        setTitle("Swing Dashboard");
+        setTitle("Dentist Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
 
@@ -16,15 +21,20 @@ public class DentistDashboard extends JFrame {
 
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        ImageIcon icon = new ImageIcon("path/to/your/icon.png");
+        ImageIcon icon = new ImageIcon("src/Static/icons/logo2.png");
         JLabel iconLabel = new JLabel(icon);
+        iconLabel.setBounds(0, 0, 20, 20);
 
         // Add text
-        JLabel titleLabel = new JLabel("Dashboard Title");
-        titleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        JLabel titleLabel = new JLabel("      Dashboard Title");
+        titleLabel.setFont(Themes.DEFAULTFONT);
 
         topPanel.add(iconLabel, BorderLayout.WEST);
         topPanel.add(titleLabel, BorderLayout.CENTER);
+
+        // Add shadowed separator
+        JSeparator separator = createShadowedSeparator();
+        topPanel.add(separator, BorderLayout.SOUTH);
 
         // Create the main layout
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -36,6 +46,14 @@ public class DentistDashboard extends JFrame {
 
         setLocationRelativeTo(null); // Center the JFrame
         setVisible(true);
+    }
+
+    private JSeparator createShadowedSeparator() {
+        JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
+        Border border = separator.getBorder();
+        Border margin = new EmptyBorder(5, 0, 0, 0);
+        separator.setBorder(new CompoundBorder(border, margin));
+        return separator;
     }
 
     public static void main(String[] args) {

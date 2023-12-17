@@ -19,7 +19,7 @@ public class LoginPanel extends JPanel {
         // Top Panel for the login text
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel loginText = new JLabel("<html><font color='blue'>Login </font><font color='black'>your account</font></html>");
-        loginText.setFont(Themes.TITLEFONT);
+        loginText.setFont(Themes.DEFAULTFONT);
         topPanel.add(loginText);
         topPanel.setBackground(Color.WHITE);  // Set background color
 
