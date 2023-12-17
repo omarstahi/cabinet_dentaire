@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Patient extends Personne {
     private LocalDate dateNaissance;
     Mutuelle mutuelle;
-    ArrayList<AntecedantMedical> AntecedantMedicaux;
+    ArrayList<AntecedantMedical> AntecedantMedicaux = new ArrayList<>();
 
     public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, LocalDate dateNaissance, Mutuelle mutuelle, ArrayList<AntecedantMedical> antecedantMedicaux) {
         super(nom, prenom, adresse, telephone, email, cin);

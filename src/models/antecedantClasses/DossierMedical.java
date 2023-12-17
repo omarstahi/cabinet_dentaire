@@ -17,7 +17,7 @@ public class DossierMedical{
     private Patient patient;
     private SituationFinanciere situationFinanciere;
     private Dentiste medcinTraitant;
-    private  String numeroDossier;
+    private String numeroDossier;
     private StatutPaiement statutPaiement;
 
     public DossierMedical() {

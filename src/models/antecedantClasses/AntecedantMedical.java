@@ -39,7 +39,7 @@ public class AntecedantMedical{
         this.categorie = categorie;
     }
 
-    private ArrayList<Patient> patientAvecCeAntecedantMedacal;
+    private ArrayList<Patient> patientAvecCeAntecedantMedacal = new ArrayList<>();
     private String libelle;
     private CategorieAntecedentMedicaux categorie;
 }
