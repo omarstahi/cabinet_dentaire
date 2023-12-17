@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Acte {
     private Long idActe;
     private Long index = 0L;
-    private ArrayList<InterventionMedecin> interventions;
+    private ArrayList<InterventionMedecin> interventions = new ArrayList<>();
     private Double prixDeBase;
     private CategorieActe categorie;
     private String libelle;
