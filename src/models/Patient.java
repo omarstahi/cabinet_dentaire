@@ -4,10 +4,11 @@ import models.Mutuelle;
 import models.Personne;
 import models.antecedantClasses.AntecedantMedical;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Patient extends Personne {
+public class Patient extends Personne  implements Serializable {
     private LocalDate dateNaissance;
     Mutuelle mutuelle;
     ArrayList<AntecedantMedical> AntecedantMedicaux = new ArrayList<>();

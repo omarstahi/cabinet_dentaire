@@ -2,9 +2,10 @@ package models.antecedantClasses;
 
 import models.Patient;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class AntecedantMedical{
+public class AntecedantMedical implements Serializable {
     private Long idAntecedant;
 
     public Long getIdAntecedant() {

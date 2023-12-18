@@ -1,9 +1,10 @@
 package UI.dentistDashboard;
 
+import Database.FileDatabase;
 import Static.Themes;
 import UI.dentistDashboard.panels.ContentPanel;
 import UI.dentistDashboard.panels.NavbarPanel;
-
+import services.PatientService;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -46,6 +47,8 @@ public class DentistDashboard extends JFrame {
 
         setLocationRelativeTo(null); // Center the JFrame
         setVisible(true);
+        PatientService patientService = new PatientService(new FileDatabase());
+
     }
 
     private JSeparator createShadowedSeparator() {

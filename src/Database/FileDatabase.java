@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FileDatabase {
 
-    private static final String PATIENTS_FILE = "patients.txt";
+    private static final String PATIENTS_FILE = "src/Database/files/patients.txt";
 
     // Méthode pour ajouter un patient
     public void addPatient(Patient patient) {
