@@ -15,10 +15,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ContentPanel extends JPanel {
-    FileDatabase filedatabase = new FileDatabase();
-    private PatientService patientService = new PatientService(filedatabase);
+    FileDatabase filedatabase;
+    private PatientService patientService;
 
-    public ContentPanel() {setLayout(null);}
+    public ContentPanel(FileDatabase filedatabase) {
+        setLayout(null);
+        this.filedatabase = filedatabase;
+        this.patientService = new PatientService(filedatabase);
+    }
 
     public void profileContent() {
         removeAll();
@@ -91,15 +95,18 @@ public class ContentPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Get the entered information
                 String name = nameField.getText();
-                String age = birthField.getText();
+                String birth = birthField.getText();
+
 
                 // Create a Patient object
-                Patient newPatient = new Patient(name, "e", "e", "e", "e", "e", LocalDate.now(), null, new ArrayList<>());
+                Patient newPatient = new Patient(name, "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CIMR, new ArrayList<>());
                     // Call the addPatient method from the PatientService
                 // Note: You need to have an instance of PatientService in your ContentPanel class
                 // and set it accordingly before calling this method
                 if (patientService != null) {
-                    patientService.addPatient(newPatient);
+                    filedatabase.addPatient(newPatient);
+                    System.out.println(filedatabase.getAllPatients());
+
                     System.out.println("Patient added: " + newPatient);
                 } else {
                     System.out.println("PatientService not initialized.");

@@ -2,7 +2,6 @@ package services;
 
 import Database.FileDatabase;
 import models.Patient;
-
 import java.util.List;
 
 public class PatientService {

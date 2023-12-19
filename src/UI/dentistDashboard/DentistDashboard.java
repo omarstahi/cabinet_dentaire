@@ -12,12 +12,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class DentistDashboard extends JFrame {
+    FileDatabase filedatabase;
     public DentistDashboard() {
+        filedatabase = new FileDatabase();
         setTitle("Dentist Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
 
-        ContentPanel contentPanel = new ContentPanel();
+        ContentPanel contentPanel = new ContentPanel(filedatabase);
         NavbarPanel navbarPanel = new NavbarPanel(contentPanel);
 
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -47,7 +49,6 @@ public class DentistDashboard extends JFrame {
 
         setLocationRelativeTo(null); // Center the JFrame
         setVisible(true);
-        PatientService patientService = new PatientService(new FileDatabase());
 
     }
 

@@ -8,11 +8,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Patient extends Personne  implements Serializable {
+public class Patient extends Personne implements Serializable {
     private LocalDate dateNaissance;
-    Mutuelle mutuelle;
-    ArrayList<AntecedantMedical> AntecedantMedicaux = new ArrayList<>();
+    private transient Mutuelle mutuelle;
+    private transient ArrayList<AntecedantMedical> AntecedantMedicaux = new ArrayList<>();
 
+    public Patient() {
+        super("", "", "", "", "", "");
+        // Initialize any other fields if needed
+    }
     public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, LocalDate dateNaissance, Mutuelle mutuelle, ArrayList<AntecedantMedical> antecedantMedicaux) {
         super(nom, prenom, adresse, telephone, email, cin);
         this.dateNaissance = dateNaissance;
