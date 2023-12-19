@@ -96,10 +96,10 @@ public class ContentPanel extends JPanel {
                 // Get the entered information
                 String name = nameField.getText();
                 String birth = birthField.getText();
-
+                System.out.println("name : " + name);
 
                 // Create a Patient object
-                Patient newPatient = new Patient(name, "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CIMR, new ArrayList<>());
+                Patient newPatient = new Patient("name", "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CIMR, new ArrayList<>());
                     // Call the addPatient method from the PatientService
                 // Note: You need to have an instance of PatientService in your ContentPanel class
                 // and set it accordingly before calling this method

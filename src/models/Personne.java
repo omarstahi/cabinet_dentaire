@@ -10,6 +10,9 @@ public class Personne{
         return id;
     }
 
+    public Personne() {
+    }
+
     public Personne(String nom, String prenom, String adresse, String telephone, String email, String cin) {
         setId();
         this.nom = nom;
@@ -70,5 +73,18 @@ public class Personne{
 
     public void setCin(String cin) {
         this.cin = cin;
+    }
+
+    @Override
+    public String toString() {
+        return "Personne{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", email='" + email + '\'' +
+                ", cin='" + cin + '\'' +
+                '}';
     }
 }
