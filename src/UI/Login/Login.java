@@ -26,5 +26,6 @@ public class Login extends JFrame{
         add(rightPanel);
 
         setVisible(true);
+
     }
 }

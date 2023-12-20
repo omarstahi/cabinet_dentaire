@@ -5,6 +5,8 @@ import services.PatientService;
 
 public class AppLancher{
     public static void main(String[] args){
-        Login l = new Login();
+        new Login();
+        FileDatabase DB = new FileDatabase();
+        new PatientService(DB);
     }
 }

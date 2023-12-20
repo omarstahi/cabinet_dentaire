@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class ContentPanel extends JPanel {
     FileDatabase filedatabase;
-    private PatientService patientService;
+    PatientService patientService;
 
     public ContentPanel(FileDatabase filedatabase) {
         setLayout(null);
@@ -98,14 +98,15 @@ public class ContentPanel extends JPanel {
                 String birth = birthField.getText();
                 System.out.println("name : " + name);
 
+
                 // Create a Patient object
-                Patient newPatient = new Patient("name", "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CIMR, new ArrayList<>());
+                Patient newPatient = new Patient(name, "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CNOPS, new ArrayList<>());
                     // Call the addPatient method from the PatientService
                 // Note: You need to have an instance of PatientService in your ContentPanel class
                 // and set it accordingly before calling this method
                 if (patientService != null) {
-                    filedatabase.addPatient(newPatient);
-                    System.out.println(filedatabase.getAllPatients());
+                    patientService.addPatient(newPatient);
+                    System.out.println(patientService.getAllPatients());
 
                     System.out.println("Patient added: " + newPatient);
                 } else {

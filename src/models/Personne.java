@@ -1,6 +1,8 @@
 package models;
 
-public class Personne{
+import java.io.Serializable;
+
+public class Personne implements Serializable {
     private Long id;
     private static Long index = 0L;
     private String nom, prenom, adresse, telephone, email, cin;
