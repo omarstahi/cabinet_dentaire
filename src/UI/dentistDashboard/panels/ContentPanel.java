@@ -5,6 +5,7 @@ import Static.Themes;
 import models.Mutuelle;
 import models.Patient;
 import models.antecedantClasses.AntecedantMedical;
+import models.antecedantClasses.DossierMedical;
 import services.PatientService;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ContentPanel extends JPanel {
     FileDatabase filedatabase;
@@ -99,14 +101,14 @@ public class ContentPanel extends JPanel {
                 System.out.println("name : " + name);
 
 
+
                 // Create a Patient object
-                Patient newPatient = new Patient(name, "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CNOPS, new ArrayList<>());
-                    // Call the addPatient method from the PatientService
-                // Note: You need to have an instance of PatientService in your ContentPanel class
-                // and set it accordingly before calling this method
+                String patientId = UUID.randomUUID().toString();
+                Patient newPatient = new Patient(name, "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CNOPS, new ArrayList<>(), new DossierMedical());
                 if (patientService != null) {
                     patientService.addPatient(newPatient);
                     System.out.println(patientService.getAllPatients());
+                    System.out.println(patientService.getPatientById("911f4de7-5e4f-4cd9-9b86-c978caa84e67"));
 
                     System.out.println("Patient added: " + newPatient);
                 } else {

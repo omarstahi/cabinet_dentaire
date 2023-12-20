@@ -1,14 +1,15 @@
 package models;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class Personne implements Serializable {
-    private Long id;
+    private String id;
     private static Long index = 0L;
     private String nom, prenom, adresse, telephone, email, cin;
 
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -26,7 +27,7 @@ public class Personne implements Serializable {
     }
 
     public void setId() {
-        this.id = index++;
+        this.id = UUID.randomUUID().toString();
     }
 
     public String getNom() {

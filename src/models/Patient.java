@@ -3,6 +3,7 @@ package models;
 import models.Mutuelle;
 import models.Personne;
 import models.antecedantClasses.AntecedantMedical;
+import models.antecedantClasses.DossierMedical;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,21 +17,25 @@ public class Patient extends Personne implements Serializable {
     private LocalDate dateNaissance;
     private Mutuelle mutuelle;
     private ArrayList<AntecedantMedical> AntecedantMedicaux = new ArrayList<>();
+    private DossierMedical dossierMedical;
 
-    public Patient() {
+    public Patient(DossierMedical dossierMedical) {
 
         // Empty constructor
+        this.dossierMedical = dossierMedical;
     }
 
-    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, LocalDate dateNaissance, Mutuelle mutuelle, ArrayList<AntecedantMedical> antecedantMedicaux) {
+    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, LocalDate dateNaissance, Mutuelle mutuelle, ArrayList<AntecedantMedical> antecedantMedicaux, DossierMedical dossierMedical) {
         super(nom, prenom, adresse, telephone, email, cin);
         this.dateNaissance = dateNaissance;
         this.mutuelle = mutuelle;
         AntecedantMedicaux = antecedantMedicaux;
+        this.dossierMedical = dossierMedical;
     }
 
-    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin) {
+    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, DossierMedical dossierMedical) {
         super(nom, prenom, adresse, telephone, email, cin);
+        this.dossierMedical = dossierMedical;
     }
 
     public LocalDate getDateNaissance() {

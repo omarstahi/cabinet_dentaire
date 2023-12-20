@@ -6,12 +6,13 @@ import models.consultation.Consultation;
 import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DossierMedical{
+public class DossierMedical implements Serializable {
     private List <Consultation> Consultations = new ArrayList<Consultation>();
     private LocalDate dateCreation ;
     private Patient patient;
