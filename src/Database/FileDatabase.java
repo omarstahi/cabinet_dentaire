@@ -29,8 +29,8 @@ public class FileDatabase {
     }
 
     // Méthode pour récupérer tous les patients
-    public List<Patient> getAllPatients() {
-        List<Patient> patients = new ArrayList<>();
+    public ArrayList<Patient> getAllPatients() {
+        ArrayList<Patient> patients = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PATIENTS_FILE))) {
             while (true) {
                 try {

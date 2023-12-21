@@ -9,6 +9,7 @@ import models.antecedantClasses.DossierMedical;
 import services.PatientService;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -65,27 +66,61 @@ public class ContentPanel extends JPanel {
         // Create a panel to hold the components
         JPanel patientPanel = new JPanel(new GridLayout(2, 1));
 
-        // Table
-        JTable patientTable = new JTable(5, 5);
-        JScrollPane tableScrollPane = new JScrollPane(patientTable);
-        patientPanel.add(tableScrollPane);
 
         // Form
-        JPanel formPanel = new JPanel(new GridLayout(4, 2));
-        JLabel nameLabel = new JLabel("Name:");
-        nameLabel.setFont(Themes.DEFAULTFONT);
-        JTextField nameField = new JTextField();
-        JLabel birthLabel = new JLabel("Age:");
+        JPanel formPanel = new JPanel(new GridLayout(5, 4, 5, 5));
+        JLabel firstNameLabel = new JLabel("First Name:");
+        firstNameLabel.setFont(Themes.DEFAULTFONT);
+        JTextField firstNameField = new JTextField();
+
+        JLabel lastNameLabel = new JLabel("Last name:");
+        lastNameLabel.setFont(Themes.DEFAULTFONT);
+        JTextField lastNameField = new JTextField();
+
+        JLabel addressLabel = new JLabel("Address:");
+        addressLabel.setFont(Themes.DEFAULTFONT);
+        JTextField addressField = new JTextField();
+
+        JLabel phoneLabel = new JLabel("Phone:");
+        phoneLabel.setFont(Themes.DEFAULTFONT);
+        JTextField phoneField = new JTextField();
+
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setFont(Themes.DEFAULTFONT);
+        JTextField emailField = new JTextField();
+
+        JLabel cinLabel = new JLabel("CIN:");
+        cinLabel.setFont(Themes.DEFAULTFONT);
+        JTextField cinField = new JTextField();
+
+        JLabel birthLabel = new JLabel("Birth:");
         birthLabel.setFont(Themes.DEFAULTFONT);
         JTextField birthField = new JTextField();
+
+        JLabel mutuelleLabel = new JLabel("Mutuelle:");
+        mutuelleLabel.setFont(Themes.DEFAULTFONT);
+        JTextField mutuelleField = new JTextField();
+
         JButton submitButton = new JButton("Submit");
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
 
-        formPanel.add(nameLabel);
-        formPanel.add(nameField);
+        formPanel.add(firstNameLabel);
+        formPanel.add(firstNameField);
+        formPanel.add(lastNameLabel);
+        formPanel.add(lastNameField);
+        formPanel.add(addressLabel);
+        formPanel.add(addressField);
+        formPanel.add(phoneLabel);
+        formPanel.add(phoneField);
+        formPanel.add(emailLabel);
+        formPanel.add(emailField);
+        formPanel.add(cinLabel);
+        formPanel.add(cinField);
         formPanel.add(birthLabel);
         formPanel.add(birthField);
+        formPanel.add(mutuelleLabel);
+        formPanel.add(mutuelleField);
         formPanel.add(new JLabel()); // Empty label for spacing
         formPanel.add(submitButton);
 
@@ -96,7 +131,7 @@ public class ContentPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Get the entered information
-                String name = nameField.getText();
+                String name = firstNameField.getText();
                 String birth = birthField.getText();
                 System.out.println("name : " + name);
 
@@ -108,24 +143,63 @@ public class ContentPanel extends JPanel {
                 if (patientService != null) {
                     patientService.addPatient(newPatient);
                     System.out.println(patientService.getAllPatients());
-                    System.out.println(patientService.getPatientById("911f4de7-5e4f-4cd9-9b86-c978caa84e67"));
-
+                    System.out.println(patientService.getPatientById("2a527674-9ea8-44b1-9b38-95c6d4d9d97c"));
                     System.out.println("Patient added: " + newPatient);
+
                 } else {
                     System.out.println("PatientService not initialized.");
                 }
             }
         });
+        displayPatients();
+
         revalidate();
         repaint();
     }
-
 
     public void caisseContent() {
         removeAll();
         revalidate();
         repaint();
     }
+
+    public void displayPatients() {
+        //removeAll();
+        //setLayout(new GridLayout(2,1));
+
+        // Get the list of patients from the database
+        ArrayList<Patient> patients = patientService.getAllPatients();
+
+        // Define column names
+        String[] columnNames = {"ID", "Full Name", "Phone", "Address", "Birth"};
+
+        // Create a 2D array to hold data for the table
+        Object[][] data = new Object[patients.size()][columnNames.length];
+
+        // Populate the data array
+        for (int i = 0; i < patients.size(); i++) {
+            Patient patient = patients.get(i);
+            data[i][0] = patient.getId();
+            data[i][1] = patient.getNom() + " " + patient.getPrenom();
+            data[i][2] = patient.getTelephone();
+            data[i][3] = patient.getAdresse();
+            data[i][4] = patient.getDateNaissance();
+        }
+
+        // Create a new table model with the data
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
+
+        // Create a JTable with the table model
+        JTable patientTable = new JTable(tableModel);
+
+        // Add the table to a scroll pane
+        JScrollPane tableScrollPane = new JScrollPane(patientTable);
+
+        // Add the scroll pane to the panel
+        add(tableScrollPane, BorderLayout.CENTER);
+    }
+
+
     private Icon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();
         Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);

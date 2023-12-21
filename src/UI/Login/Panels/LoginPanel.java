@@ -58,7 +58,8 @@ public class LoginPanel extends JPanel {
 
             if ("doctor".equals(username) && "doctor".equals(new String(password))) {
                 new DentistDashboard();
-            } else if ("sec".equals(username) && "sec".equals(new String(password))) {
+            } else if ("sec".equals(username) && "sec".
+                    equals(new String(password))) {
                 new SecretaireDashboard();
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid username or password. Try again.");

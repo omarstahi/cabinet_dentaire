@@ -2,6 +2,8 @@ package services;
 
 import Database.FileDatabase;
 import models.Patient;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatientService {
@@ -20,7 +22,7 @@ public class PatientService {
         return fileDatabase.getPatientById(patientId);
     }
 
-    public List<Patient> getAllPatients() {
+    public ArrayList<Patient> getAllPatients() {
         return fileDatabase.getAllPatients();
     }
 
