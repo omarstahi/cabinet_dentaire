@@ -5,7 +5,9 @@ import Static.Themes;
 import models.Mutuelle;
 import models.Patient;
 import models.antecedantClasses.AntecedantMedical;
+import models.antecedantClasses.CategorieAntecedentMedicaux;
 import models.antecedantClasses.DossierMedical;
+import models.antecedantClasses.Risque;
 import services.PatientService;
 
 import javax.swing.*;
@@ -68,7 +70,7 @@ public class ContentPanel extends JPanel {
 
 
         // Form
-        JPanel formPanel = new JPanel(new GridLayout(5, 4, 5, 5));
+        JPanel formPanel = new JPanel(new GridLayout(6, 4, 5, 5));
         JLabel firstNameLabel = new JLabel("First Name:");
         firstNameLabel.setFont(Themes.DEFAULTFONT);
         JTextField firstNameField = new JTextField();
@@ -99,9 +101,28 @@ public class ContentPanel extends JPanel {
 
         JLabel mutuelleLabel = new JLabel("Mutuelle:");
         mutuelleLabel.setFont(Themes.DEFAULTFONT);
-        JTextField mutuelleField = new JTextField();
 
-        JButton submitButton = new JButton("Submit");
+        JLabel antecedantLabel = new JLabel("Antecedant medical:");
+        antecedantLabel.setFont(Themes.DEFAULTFONT);
+
+        JLabel risqueLabel = new JLabel("Risque:");
+        risqueLabel.setFont(Themes.DEFAULTFONT);
+
+        Mutuelle[] mutuelleItems = {Mutuelle.CIMR, Mutuelle.CNAM, Mutuelle.CNOPS, Mutuelle.CNSS};
+        CategorieAntecedentMedicaux[] categorieAntecedentMedicauxesItems = {CategorieAntecedentMedicaux.ALLERGIE,
+                                                                            CategorieAntecedentMedicaux.CONTRE_INDICATION,
+                                                                            CategorieAntecedentMedicaux.MALADIE_CHRONIQUE,
+                                                                            CategorieAntecedentMedicaux.MALADIE_HEREDITAIRE,
+                                                                            CategorieAntecedentMedicaux.AUTRE
+                                                                            };
+        Risque[] risqueItems = {Risque.FAIBLE, Risque.MOYEN, Risque.ELEVE, Risque.INCONNU};
+        JComboBox mutuelleField = new JComboBox(mutuelleItems);
+        JComboBox antecedantField = new JComboBox(categorieAntecedentMedicauxesItems);
+        JComboBox risqueField = new JComboBox(risqueItems);
+
+
+
+        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
 
@@ -121,6 +142,10 @@ public class ContentPanel extends JPanel {
         formPanel.add(birthField);
         formPanel.add(mutuelleLabel);
         formPanel.add(mutuelleField);
+        formPanel.add(antecedantLabel);
+        formPanel.add(antecedantField);
+        formPanel.add(risqueLabel);
+        formPanel.add(risqueField);
         formPanel.add(new JLabel()); // Empty label for spacing
         formPanel.add(submitButton);
 
@@ -131,19 +156,27 @@ public class ContentPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Get the entered information
-                String name = firstNameField.getText();
+                String fname = firstNameField.getText();
+                String lname = lastNameField.getText();
                 String birth = birthField.getText();
-                System.out.println("name : " + name);
+                String address = addressField.getText();
+                String phone = phoneField.getText();
+                String email = emailField.getText();
+                String cin = cinField.getText();
+                Mutuelle selectedMutuelle = (Mutuelle) mutuelleField.getSelectedItem();
+                AntecedantMedical selectedAntecedant = (AntecedantMedical) antecedantField.getSelectedItem();
+                Risque selectedRisque = (Risque) risqueField.getSelectedItem();
+                //System.out.println("name : " + name);
+               // formPanel.add(mutuelleField);
 
 
 
                 // Create a Patient object
                 String patientId = UUID.randomUUID().toString();
-                Patient newPatient = new Patient(name, "a", "a", "a", "a", "a", LocalDate.now(), Mutuelle.CNOPS, new ArrayList<>(), new DossierMedical());
+                Patient newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.now(), selectedMutuelle, new ArrayList<>(), new DossierMedical());
                 if (patientService != null) {
                     patientService.addPatient(newPatient);
                     System.out.println(patientService.getAllPatients());
-                    System.out.println(patientService.getPatientById("2a527674-9ea8-44b1-9b38-95c6d4d9d97c"));
                     System.out.println("Patient added: " + newPatient);
 
                 } else {
