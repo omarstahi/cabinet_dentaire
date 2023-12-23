@@ -11,6 +11,8 @@ import models.antecedantClasses.Risque;
 import services.PatientService;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -66,7 +68,7 @@ public class ContentPanel extends JPanel {
         removeAll();
         setLayout(new GridLayout(2,1));
         // Create a panel to hold the components
-        JPanel patientPanel = new JPanel(new GridLayout(2, 1));
+        JPanel patientPanel = new JPanel(new GridLayout(1, 1));
 
 
         // Form
@@ -231,6 +233,27 @@ public class ContentPanel extends JPanel {
 
         // Add the scroll pane to the panel
         add(tableScrollPane, BorderLayout.CENTER);
+        // Add a selection listener to the table
+        ListSelectionModel selectionModel = patientTable.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = patientTable.getSelectedRow();
+
+                    if (selectedRow != -1) {
+                        // Retrieve the patient ID from the selected row
+                        Object patientId = patientTable.getValueAt(selectedRow, 0);
+
+
+                        // Display a JOptionPane with the patient ID
+                        JOptionPane.showMessageDialog(ContentPanel.this, "Selected Patient ID: " + patientService.getPatientById((String)patientId), "Patient ID", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
     }
 
 
