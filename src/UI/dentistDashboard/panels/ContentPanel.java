@@ -164,7 +164,7 @@ public class ContentPanel extends JPanel {
                 String email = emailField.getText();
                 String cin = cinField.getText();
                 Mutuelle selectedMutuelle = (Mutuelle) mutuelleField.getSelectedItem();
-                AntecedantMedical selectedAntecedant = (AntecedantMedical) antecedantField.getSelectedItem();
+                CategorieAntecedentMedicaux selectedAntecedant = (CategorieAntecedentMedicaux) antecedantField.getSelectedItem();
                 Risque selectedRisque = (Risque) risqueField.getSelectedItem();
                 //System.out.println("name : " + name);
                // formPanel.add(mutuelleField);
@@ -172,8 +172,9 @@ public class ContentPanel extends JPanel {
 
 
                 // Create a Patient object
-                String patientId = UUID.randomUUID().toString();
-                Patient newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.now(), selectedMutuelle, new ArrayList<>(), new DossierMedical());
+                AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
+                selectedAntecedant.setRisqueAssocie(selectedRisque);
+                Patient newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.now(), selectedMutuelle, antecedant, new DossierMedical());
                 if (patientService != null) {
                     patientService.addPatient(newPatient);
                     System.out.println(patientService.getAllPatients());

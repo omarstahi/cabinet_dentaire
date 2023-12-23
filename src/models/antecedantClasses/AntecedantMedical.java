@@ -5,19 +5,20 @@ import models.Patient;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class AntecedantMedical implements Serializable {
     //@Serial
 //    private static final long serialVersionUID = 1L;
 
-    private Long idAntecedant;
+    private String idAntecedant;
 
-    public Long getIdAntecedant() {
+    public String getIdAntecedant() {
         return idAntecedant;
     }
 
-    public void setIdAntecedant(Long idAntecedant) {
-        this.idAntecedant = idAntecedant;
+    public void setIdAntecedant() {
+        this.idAntecedant = UUID.randomUUID().toString();
     }
 
     public ArrayList<Patient> getPatientAvecCeAntecedantMedacal() {
@@ -36,15 +37,19 @@ public class AntecedantMedical implements Serializable {
         this.libelle = libelle;
     }
 
-    public CategorieAntecedentMedicaux getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(CategorieAntecedentMedicaux categorie) {
-        this.categorie = categorie;
-    }
 
     private ArrayList<Patient> patientAvecCeAntecedantMedacal = new ArrayList<>();
     private String libelle;
     private CategorieAntecedentMedicaux categorie;
+
+    public AntecedantMedical(CategorieAntecedentMedicaux categorie) {
+        this.categorie = categorie;
+    }
+
+    @Override
+    public String toString() {
+        return "AntecedantMedical{" +
+                "categorie=" + categorie +
+                '}';
+    }
 }

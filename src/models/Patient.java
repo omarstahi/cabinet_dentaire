@@ -11,9 +11,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Patient extends Personne implements Serializable {
-//    @Serial
-//    private static final long serialVersionUID = 1L;
-
     private LocalDate dateNaissance;
     private Mutuelle mutuelle;
     private ArrayList<AntecedantMedical> AntecedantMedicaux = new ArrayList<>();
@@ -25,11 +22,11 @@ public class Patient extends Personne implements Serializable {
         this.dossierMedical = dossierMedical;
     }
 
-    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, LocalDate dateNaissance, Mutuelle mutuelle, ArrayList<AntecedantMedical> antecedantMedicaux, DossierMedical dossierMedical) {
+    public Patient(String nom, String prenom, String adresse, String telephone, String email, String cin, LocalDate dateNaissance, Mutuelle mutuelle, AntecedantMedical antecedantMedical, DossierMedical dossierMedical) {
         super(nom, prenom, adresse, telephone, email, cin);
         this.dateNaissance = dateNaissance;
         this.mutuelle = mutuelle;
-        AntecedantMedicaux = antecedantMedicaux;
+        AntecedantMedicaux.add(antecedantMedical);
         this.dossierMedical = dossierMedical;
     }
 
@@ -65,10 +62,9 @@ public class Patient extends Personne implements Serializable {
     @Override
     public String toString() {
         return "Patient{" +
-                "name='" + this.getNom() + '\'' +
-                ", date=" + this.getDateNaissance() +
-                ", mutuelle=" + this.getMutuelle() +
-                ", ID=" + this.getId() +
+                "dateNaissance=" + dateNaissance +
+                ", mutuelle=" + mutuelle +
+                ", AntecedantMedicaux=" + AntecedantMedicaux +
                 '}';
     }
 }

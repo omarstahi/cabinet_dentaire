@@ -30,7 +30,7 @@ public class DentistDashboard extends JFrame {
 
         // Add text
         JLabel titleLabel = new JLabel("      Dashboard Title");
-        titleLabel.setFont(Themes.DEFAULTFONT);
+        titleLabel.setFont(new Font("Monospaced", Font.ITALIC, 30));
 
         topPanel.add(iconLabel, BorderLayout.WEST);
         topPanel.add(titleLabel, BorderLayout.CENTER);
