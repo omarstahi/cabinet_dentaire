@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -97,7 +98,7 @@ public class ContentPanel extends JPanel {
         cinLabel.setFont(Themes.DEFAULTFONT);
         JTextField cinField = new JTextField();
 
-        JLabel birthLabel = new JLabel("Birth:");
+        JLabel birthLabel = new JLabel("Birth (YYYY-MM-DD):");
         birthLabel.setFont(Themes.DEFAULTFONT);
         JTextField birthField = new JTextField();
 
@@ -176,7 +177,13 @@ public class ContentPanel extends JPanel {
                 // Create a Patient object
                 AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
                 selectedAntecedant.setRisqueAssocie(selectedRisque);
-                Patient newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.now(), selectedMutuelle, antecedant, new DossierMedical());
+                try {
+                    Patient newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, new DossierMedical());
+                if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
+                        phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
+                    return;  // Exit the method if any field is empty
+                }
                 if (patientService != null) {
                     patientService.addPatient(newPatient);
                     System.out.println(patientService.getAllPatients());
@@ -184,6 +191,10 @@ public class ContentPanel extends JPanel {
 
                 } else {
                     System.out.println("PatientService not initialized.");
+                }
+                } catch (DateTimeParseException exp){
+                    System.out.println("ghjkl");
+                    JOptionPane.showMessageDialog(null, "Please fill the date of birth field with the correct format", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -246,16 +257,26 @@ public class ContentPanel extends JPanel {
                     if (selectedRow != -1) {
                         // Retrieve the patient ID from the selected row
                         Object patientId = patientTable.getValueAt(selectedRow, 0);
+                        consultationContent(patientService.getPatientById((String)patientId));
 
 
                         // Display a JOptionPane with the patient ID
-                        JOptionPane.showMessageDialog(ContentPanel.this, "Selected Patient ID: " + patientService.getPatientById((String)patientId), "Patient ID", JOptionPane.INFORMATION_MESSAGE);
+                        //JOptionPane.showMessageDialog(ContentPanel.this, "Selected Patient ID: " + patientService.getPatientById((String)patientId), "Patient ID", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
         });
     }
 
+    public void consultationContent(Patient patient){
+        removeAll();
+        JLabel l = new JLabel("fix birth field process");
+
+        System.out.println(patient);
+        add(l);
+        revalidate();
+        repaint();
+    }
 
     private Icon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();
