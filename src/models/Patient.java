@@ -64,6 +64,9 @@ public class Patient extends Personne implements Serializable {
         AntecedantMedicaux = antecedantMedicaux;
     }
 
+    public DossierMedical getDossierMedical(){
+        return dossierMedical;
+    }
     @Override
     public String toString() {
         return "Patient{" +

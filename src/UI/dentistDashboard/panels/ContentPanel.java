@@ -28,13 +28,14 @@ import java.util.UUID;
 public class ContentPanel extends JPanel {
     FileDatabase filedatabase;
     PatientService patientService;
-
+    private Patient newPatient;
     private DossierMedical dossierMedical;
 
     public ContentPanel(FileDatabase filedatabase) {
         setLayout(null);
         this.filedatabase = filedatabase;
         this.patientService = new PatientService(filedatabase);
+        profileContent();
     }
 
     public void profileContent() {
@@ -186,7 +187,7 @@ public class ContentPanel extends JPanel {
                 AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
                 selectedAntecedant.setRisqueAssocie(selectedRisque);
                 try {
-                    Patient newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, new DossierMedical());
+                    newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
                 if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
                         phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
@@ -275,7 +276,8 @@ public class ContentPanel extends JPanel {
 
     public void dossierMedicalContent(Patient patient, DossierMedical dossierMedical){
         removeAll();
-        JLabel l = new JLabel(dossierMedical.toString());
+
+        JLabel l = new JLabel(patient.getDossierMedical().toString());
         Consultation consultation = new Consultation();
         System.out.println(patient);
         add(l);
