@@ -8,6 +8,9 @@ import models.antecedantClasses.AntecedantMedical;
 import models.antecedantClasses.CategorieAntecedentMedicaux;
 import models.antecedantClasses.DossierMedical;
 import models.antecedantClasses.Risque;
+import models.consultation.Consultation;
+import models.finance.SituationFinanciere;
+import models.finance.StatutPaiement;
 import services.PatientService;
 
 import javax.swing.*;
@@ -25,6 +28,8 @@ import java.util.UUID;
 public class ContentPanel extends JPanel {
     FileDatabase filedatabase;
     PatientService patientService;
+
+    private DossierMedical dossierMedical;
 
     public ContentPanel(FileDatabase filedatabase) {
         setLayout(null);
@@ -175,6 +180,9 @@ public class ContentPanel extends JPanel {
 
 
                 // Create a Patient object
+                // DossierMedical(ArrayList<Consultation> consultations, LocalDate dateCreation, Patient patient, SituationFinanciere situationFinanciere, StatutPaiement statutPaiement) {
+                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
+
                 AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
                 selectedAntecedant.setRisqueAssocie(selectedRisque);
                 try {
@@ -185,6 +193,7 @@ public class ContentPanel extends JPanel {
                     return;  // Exit the method if any field is empty
                 }
                 if (patientService != null) {
+                    dossierMedical.setPatient(newPatient);
                     patientService.addPatient(newPatient);
                     System.out.println(patientService.getAllPatients());
                     System.out.println("Patient added: " + newPatient);
@@ -198,7 +207,7 @@ public class ContentPanel extends JPanel {
                 }
             }
         });
-        displayPatients();
+        displayPatients(dossierMedical);
 
         revalidate();
         repaint();
@@ -210,7 +219,7 @@ public class ContentPanel extends JPanel {
         repaint();
     }
 
-    public void displayPatients() {
+    public void displayPatients(DossierMedical dossierMedical) {
         //removeAll();
         //setLayout(new GridLayout(2,1));
 
@@ -257,21 +266,17 @@ public class ContentPanel extends JPanel {
                     if (selectedRow != -1) {
                         // Retrieve the patient ID from the selected row
                         Object patientId = patientTable.getValueAt(selectedRow, 0);
-                        consultationContent(patientService.getPatientById((String)patientId));
-
-
-                        // Display a JOptionPane with the patient ID
-                        //JOptionPane.showMessageDialog(ContentPanel.this, "Selected Patient ID: " + patientService.getPatientById((String)patientId), "Patient ID", JOptionPane.INFORMATION_MESSAGE);
+                        dossierMedicalContent(patientService.getPatientById((String)patientId), dossierMedical);
                     }
                 }
             }
         });
     }
 
-    public void consultationContent(Patient patient){
+    public void dossierMedicalContent(Patient patient, DossierMedical dossierMedical){
         removeAll();
-        JLabel l = new JLabel("fix birth field process");
-
+        JLabel l = new JLabel(dossierMedical.toString());
+        Consultation consultation = new Consultation();
         System.out.println(patient);
         add(l);
         revalidate();

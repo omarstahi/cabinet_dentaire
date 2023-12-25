@@ -16,6 +16,11 @@ public class Patient extends Personne implements Serializable {
     private ArrayList<AntecedantMedical> AntecedantMedicaux = new ArrayList<>();
     private DossierMedical dossierMedical;
 
+
+    public Patient() {
+
+    }
+
     public Patient(DossierMedical dossierMedical) {
 
         // Empty constructor

@@ -11,25 +11,25 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class DossierMedical implements Serializable {
-    private List <Consultation> Consultations = new ArrayList<Consultation>();
+    private ArrayList <Consultation> Consultations = new ArrayList<>();
     private LocalDate dateCreation ;
     private Patient patient;
     private SituationFinanciere situationFinanciere;
-    private Dentiste medcinTraitant;
     private String numeroDossier;
     private StatutPaiement statutPaiement;
 
     public DossierMedical() {
     }
 
-    public DossierMedical(List<Consultation> consultations, LocalDate dateCreation, Patient patient, SituationFinanciere situationFinanciere, Dentiste medcinTraitant, String numeroDossier, StatutPaiement statutPaiement) {
+    public DossierMedical(ArrayList<Consultation> consultations, LocalDate dateCreation, Patient patient, SituationFinanciere situationFinanciere, StatutPaiement statutPaiement) {
+        setNumeroDossier();
         Consultations = consultations;
         this.dateCreation = dateCreation;
         this.patient = patient;
         this.situationFinanciere = situationFinanciere;
-        this.medcinTraitant = medcinTraitant;
         this.numeroDossier = numeroDossier;
         this.statutPaiement = statutPaiement;
     }
@@ -38,7 +38,7 @@ public class DossierMedical implements Serializable {
         return Consultations;
     }
 
-    public void setConsultations(List<Consultation> consultations) {
+    public void setConsultations(ArrayList<Consultation> consultations) {
         Consultations = consultations;
     }
 
@@ -66,20 +66,12 @@ public class DossierMedical implements Serializable {
         this.situationFinanciere = situationFinanciere;
     }
 
-    public Dentiste getMedcinTraitant() {
-        return medcinTraitant;
-    }
-
-    public void setMedcinTraitant(Dentiste medcinTraitant) {
-        this.medcinTraitant = medcinTraitant;
-    }
-
     public String getNumeroDossier() {
         return numeroDossier;
     }
 
-    public void setNumeroDossier(String numeroDossier) {
-        this.numeroDossier = numeroDossier;
+    public void setNumeroDossier() {
+        this.numeroDossier = UUID.randomUUID().toString();
     }
 
     public StatutPaiement getStatutPaiement() {
@@ -97,7 +89,6 @@ public class DossierMedical implements Serializable {
                 ", dateCreation=" + dateCreation +
                 ", patient=" + patient +
                 ", situationFinanciere=" + situationFinanciere +
-                ", medcinTraitant=" + medcinTraitant +
                 ", numeroDossier='" + numeroDossier + '\'' +
                 ", statutPaiement=" + statutPaiement +
                 '}';
@@ -108,11 +99,11 @@ public class DossierMedical implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DossierMedical that = (DossierMedical) o;
-        return Objects.equals(Consultations, that.Consultations) && Objects.equals(dateCreation, that.dateCreation) && Objects.equals(patient, that.patient) && Objects.equals(situationFinanciere, that.situationFinanciere) && Objects.equals(medcinTraitant, that.medcinTraitant) && Objects.equals(numeroDossier, that.numeroDossier) && statutPaiement == that.statutPaiement;
+        return Objects.equals(Consultations, that.Consultations) && Objects.equals(dateCreation, that.dateCreation) && Objects.equals(patient, that.patient) && Objects.equals(situationFinanciere, that.situationFinanciere) && Objects.equals(numeroDossier, that.numeroDossier) && statutPaiement == that.statutPaiement;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Consultations, dateCreation, patient, situationFinanciere, medcinTraitant, numeroDossier, statutPaiement);
+        return Objects.hash(Consultations, dateCreation, patient, situationFinanciere, numeroDossier, statutPaiement);
     }
 }

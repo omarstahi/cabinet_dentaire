@@ -2,12 +2,13 @@ package models.finance;
 
 import models.antecedantClasses.DossierMedical;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class SituationFinanciere {
+public class SituationFinanciere implements Serializable {
     private DossierMedical dossierMedical;
     private LocalDate dateCreation;
     private Double montantGlobalRestant;
