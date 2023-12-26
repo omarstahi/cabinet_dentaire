@@ -70,9 +70,11 @@ public class Patient extends Personne implements Serializable {
     @Override
     public String toString() {
         return "Patient{" +
+                "nom=" + getNom() +
                 "dateNaissance=" + dateNaissance +
                 ", mutuelle=" + mutuelle +
                 ", AntecedantMedicaux=" + AntecedantMedicaux +
                 '}';
     }
+
 }

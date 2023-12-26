@@ -2,6 +2,7 @@ package UI.dentistDashboard.panels;
 
 import Database.FileDatabase;
 import Static.Themes;
+import models.InterventionMedecin;
 import models.Mutuelle;
 import models.Patient;
 import models.antecedantClasses.AntecedantMedical;
@@ -9,6 +10,8 @@ import models.antecedantClasses.CategorieAntecedentMedicaux;
 import models.antecedantClasses.DossierMedical;
 import models.antecedantClasses.Risque;
 import models.consultation.Consultation;
+import models.consultation.TypeConsultation;
+import models.finance.Facture;
 import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
 import services.PatientService;
@@ -29,7 +32,8 @@ public class ContentPanel extends JPanel {
     FileDatabase filedatabase;
     PatientService patientService;
     private Patient newPatient;
-    private DossierMedical dossierMedical;
+    private Consultation consultation = new Consultation();
+    private DossierMedical dossierMedical = new DossierMedical();
 
     public ContentPanel(FileDatabase filedatabase) {
         setLayout(null);
@@ -267,23 +271,39 @@ public class ContentPanel extends JPanel {
                     if (selectedRow != -1) {
                         // Retrieve the patient ID from the selected row
                         Object patientId = patientTable.getValueAt(selectedRow, 0);
-                        dossierMedicalContent(patientService.getPatientById((String)patientId), dossierMedical);
+                        dossierMedicalContent((String)patientId);
                     }
                 }
             }
         });
     }
 
-    public void dossierMedicalContent(Patient patient, DossierMedical dossierMedical){
-        removeAll();
+    public void dossierMedicalContent(String patientId){
+        //here you build the consultation interface and object
 
+        removeAll();
+        Patient patient = patientService.getPatientById(patientId);
+        DossierMedical dossier = patient.getDossierMedical();
+        consultation = new Consultation(new ArrayList<>(), dossierMedical, LocalDate.now(), TypeConsultation.SUIVI, new ArrayList<>());
+        dossier.addConsultation(consultation);
+        patient.setNom("testing");
+        patientService.updatePatient(patient);
         JLabel l = new JLabel(patient.getDossierMedical().toString());
-        Consultation consultation = new Consultation();
-        System.out.println(patient);
         add(l);
         revalidate();
         repaint();
     }
+
+
+
+
+
+
+
+
+
+
+
 
     private Icon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();

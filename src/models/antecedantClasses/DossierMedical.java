@@ -82,15 +82,16 @@ public class DossierMedical implements Serializable {
         this.statutPaiement = statutPaiement;
     }
 
+    public void addConsultation(Consultation consultation) {
+        Consultations.add(consultation);
+    }
+
     @Override
     public String toString() {
         return "DossierMedical{" +
                 "Consultations=" + Consultations +
                 ", dateCreation=" + dateCreation +
                 ", patient=" + patient +
-                ", situationFinanciere=" + situationFinanciere +
-                ", numeroDossier='" + numeroDossier + '\'' +
-                ", statutPaiement=" + statutPaiement +
                 '}';
     }
 
