@@ -67,6 +67,11 @@ public class Patient extends Personne implements Serializable {
     public DossierMedical getDossierMedical(){
         return dossierMedical;
     }
+
+    public void setDossierMedical(DossierMedical dossierMedical) {
+        this.dossierMedical = dossierMedical;
+    }
+
     @Override
     public String toString() {
         return "Patient{" +

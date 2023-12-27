@@ -1,5 +1,6 @@
 package UI.dentistDashboard.panels;
 
+import Database.DossierDao;
 import Database.FileDatabase;
 import Static.Themes;
 import models.InterventionMedecin;
@@ -15,6 +16,7 @@ import models.finance.Facture;
 import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
 import services.PatientService;
+import services.ServiceDossierMedical;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -31,6 +33,8 @@ import java.util.UUID;
 public class ContentPanel extends JPanel {
     FileDatabase filedatabase;
     PatientService patientService;
+    DossierDao dossierDao;
+    ServiceDossierMedical serviceDossierMedical;
     private Patient newPatient;
     private Consultation consultation = new Consultation();
     private DossierMedical dossierMedical = new DossierMedical();
@@ -38,7 +42,10 @@ public class ContentPanel extends JPanel {
     public ContentPanel(FileDatabase filedatabase) {
         setLayout(null);
         this.filedatabase = filedatabase;
+        this.dossierDao = new DossierDao();
         this.patientService = new PatientService(filedatabase);
+        this.serviceDossierMedical = new ServiceDossierMedical(dossierDao);
+
         profileContent();
     }
 
@@ -123,11 +130,11 @@ public class ContentPanel extends JPanel {
 
         Mutuelle[] mutuelleItems = {Mutuelle.CIMR, Mutuelle.CNAM, Mutuelle.CNOPS, Mutuelle.CNSS};
         CategorieAntecedentMedicaux[] categorieAntecedentMedicauxesItems = {CategorieAntecedentMedicaux.ALLERGIE,
-                                                                            CategorieAntecedentMedicaux.CONTRE_INDICATION,
-                                                                            CategorieAntecedentMedicaux.MALADIE_CHRONIQUE,
-                                                                            CategorieAntecedentMedicaux.MALADIE_HEREDITAIRE,
-                                                                            CategorieAntecedentMedicaux.AUTRE
-                                                                            };
+                CategorieAntecedentMedicaux.CONTRE_INDICATION,
+                CategorieAntecedentMedicaux.MALADIE_CHRONIQUE,
+                CategorieAntecedentMedicaux.MALADIE_HEREDITAIRE,
+                CategorieAntecedentMedicaux.AUTRE
+        };
         Risque[] risqueItems = {Risque.FAIBLE, Risque.MOYEN, Risque.ELEVE, Risque.INCONNU};
         JComboBox mutuelleField = new JComboBox(mutuelleItems);
         JComboBox antecedantField = new JComboBox(categorieAntecedentMedicauxesItems);
@@ -180,7 +187,7 @@ public class ContentPanel extends JPanel {
                 CategorieAntecedentMedicaux selectedAntecedant = (CategorieAntecedentMedicaux) antecedantField.getSelectedItem();
                 Risque selectedRisque = (Risque) risqueField.getSelectedItem();
                 //System.out.println("name : " + name);
-               // formPanel.add(mutuelleField);
+                // formPanel.add(mutuelleField);
 
 
 
@@ -192,20 +199,24 @@ public class ContentPanel extends JPanel {
                 selectedAntecedant.setRisqueAssocie(selectedRisque);
                 try {
                     newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
-                if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
-                        phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
-                    return;  // Exit the method if any field is empty
-                }
-                if (patientService != null) {
-                    dossierMedical.setPatient(newPatient);
-                    patientService.addPatient(newPatient);
-                    System.out.println(patientService.getAllPatients());
-                    System.out.println("Patient added: " + newPatient);
+                    if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
+                            phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
+                        return;  // Exit the method if any field is empty
+                    }
+                    if (patientService != null) {
+                        dossierMedical.setPatient(newPatient);
+                        //newPatient.setDossierMedical(dossierMedical);
+                        patientService.addPatient(newPatient);
+                        serviceDossierMedical.addDossier(dossierMedical);
+                        System.out.println(serviceDossierMedical.getAllDossiers());
 
-                } else {
-                    System.out.println("PatientService not initialized.");
-                }
+//                        System.out.println(patientService.getAllPatients());
+                        System.out.println("Patient added: " + newPatient);
+
+                    } else {
+                        System.out.println("PatientService not initialized.");
+                    }
                 } catch (DateTimeParseException exp){
                     System.out.println("ghjkl");
                     JOptionPane.showMessageDialog(null, "Please fill the date of birth field with the correct format", "Error", JOptionPane.ERROR_MESSAGE);
@@ -287,6 +298,7 @@ public class ContentPanel extends JPanel {
         consultation = new Consultation(new ArrayList<>(), dossierMedical, LocalDate.now(), TypeConsultation.SUIVI, new ArrayList<>());
         dossier.addConsultation(consultation);
         patient.setNom("testing");
+//        dossier.setPatient(new Patient());
         patientService.updatePatient(patient);
         JLabel l = new JLabel(patient.getDossierMedical().toString());
         add(l);

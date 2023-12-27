@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FileDatabase {
     private static final String PATIENTS_FILE = "src/Database/files/patients.txt";
-    private static final String ANTECEDANTSS_FILE = "src/Database/files/antecedant.txt";
+    private static final String ANTECEDANTSS_FILE = "src/Database/files/dosssierMedical.txt";
 
 
     // Méthode pour ajouter un patient

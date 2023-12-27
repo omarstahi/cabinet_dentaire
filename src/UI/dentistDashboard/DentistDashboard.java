@@ -1,5 +1,6 @@
 package UI.dentistDashboard;
 
+import Database.DossierDao;
 import Database.FileDatabase;
 import Static.Themes;
 import UI.dentistDashboard.panels.ContentPanel;
@@ -13,6 +14,7 @@ import java.awt.*;
 
 public class DentistDashboard extends JFrame {
     FileDatabase filedatabase;
+    DossierDao dossierDao;
     public DentistDashboard() {
         filedatabase = new FileDatabase();
         setTitle("Dentist Dashboard");

@@ -76,6 +76,10 @@ public class Consultation implements Serializable {
         this.factures = factures;
     }
 
+    public void addIntervention(InterventionMedecin interventionMedecin){
+        interventions.add(interventionMedecin);
+    }
+
     @Override
     public String toString() {
         return "Consultation{" +
