@@ -1,36 +1,35 @@
 package services;
 
-import Database.FileDatabase;
+import Database.dao.PatientDao;
 import models.Patient;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PatientService {
 
-    private FileDatabase fileDatabase;
+    private PatientDao patientDao;
 
-    public PatientService(FileDatabase fileDatabase) {
-        this.fileDatabase = fileDatabase;
+    public PatientService(PatientDao patientDao) {
+        this.patientDao = patientDao;
     }
 
     public void addPatient(Patient patient) {
-        fileDatabase.addPatient(patient);
+        patientDao.save(patient);
     }
 
     public Patient getPatientById(String patientId) {
-        return fileDatabase.getPatientById(patientId);
+        return patientDao.findById(patientId);
     }
 
     public ArrayList<Patient> getAllPatients() {
-        return fileDatabase.getAllPatients();
+        return patientDao.findAll();
     }
 
     public void updatePatient(Patient updatedPatient) {
-        fileDatabase.updatePatient(updatedPatient);
+        patientDao.update(updatedPatient);
     }
 
     public void deletePatient(String patientId) {
-        fileDatabase.deletePatient(patientId);
+        patientDao.delete(patientId);
     }
 }

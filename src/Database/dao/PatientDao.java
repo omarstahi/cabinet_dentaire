@@ -1,26 +1,23 @@
-// Database/FileDatabase.java
-package Database;
+package Database.dao;
 
 import models.Patient;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileDatabase {
+public class PatientDao implements IDao<Patient>{
     private static final String PATIENTS_FILE = "src/Database/files/patients.txt";
-    private static final String ANTECEDANTSS_FILE = "src/Database/files/dosssierMedical.txt";
-
 
     // Méthode pour ajouter un patient
-    public void addPatient(Patient patient) {
-        List<Patient> patients = getAllPatients();
+    public void save(Patient patient) {
+        List<Patient> patients = findAll();
         patients.add(patient);
         savePatientsToFile(patients);
     }
 
     // Méthode pour récupérer un patient par ID
-    public Patient getPatientById(String patientId) {
-        List<Patient> patients = getAllPatients();
+    public Patient findById(String patientId) {
+        List<Patient> patients = findAll();
         for (Patient patient : patients) {
             if (patient.getId().equals(patientId)) {
                 return patient;
@@ -30,7 +27,7 @@ public class FileDatabase {
     }
 
     // Méthode pour récupérer tous les patients
-    public ArrayList<Patient> getAllPatients() {
+    public ArrayList<Patient> findAll() {
         ArrayList<Patient> patients = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PATIENTS_FILE))) {
             while (true) {
@@ -50,8 +47,8 @@ public class FileDatabase {
     }
 
     // Méthode pour mettre à jour un patient
-    public void updatePatient(Patient updatedPatient) {
-        List<Patient> patients = getAllPatients();
+    public void update(Patient updatedPatient) {
+        List<Patient> patients = findAll();
         for (int i = 0; i < patients.size(); i++) {
             if (patients.get(i).getId().equals(updatedPatient.getId())) {
                 patients.set(i, updatedPatient);
@@ -62,8 +59,8 @@ public class FileDatabase {
     }
 
     // Méthode pour supprimer un patient
-    public void deletePatient(String patientId) {
-        List<Patient> patients = getAllPatients();
+    public void delete(String patientId) {
+        List<Patient> patients = findAll();
         patients.removeIf(patient -> patient.getId().equals(patientId));
         savePatientsToFile(patients);
     }

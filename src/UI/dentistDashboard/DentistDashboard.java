@@ -1,11 +1,10 @@
 package UI.dentistDashboard;
 
-import Database.DossierDao;
-import Database.FileDatabase;
-import Static.Themes;
+import Database.dao.DossierDao;
+import Database.dao.PatientDao;
 import UI.dentistDashboard.panels.ContentPanel;
 import UI.dentistDashboard.panels.NavbarPanel;
-import services.PatientService;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -13,15 +12,16 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class DentistDashboard extends JFrame {
-    FileDatabase filedatabase;
+    PatientDao patientDao;
     DossierDao dossierDao;
     public DentistDashboard() {
-        filedatabase = new FileDatabase();
+        patientDao = new PatientDao();
+        dossierDao = new DossierDao();
         setTitle("Dentist Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1100, 700);
 
-        ContentPanel contentPanel = new ContentPanel(filedatabase);
+        ContentPanel contentPanel = new ContentPanel(patientDao, dossierDao);
         NavbarPanel navbarPanel = new NavbarPanel(contentPanel);
 
         JPanel topPanel = new JPanel(new BorderLayout());

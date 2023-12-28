@@ -1,9 +1,8 @@
 package UI.dentistDashboard.panels;
 
-import Database.DossierDao;
-import Database.FileDatabase;
+import Database.dao.DossierDao;
+import Database.dao.PatientDao;
 import Static.Themes;
-import models.InterventionMedecin;
 import models.Mutuelle;
 import models.Patient;
 import models.antecedantClasses.AntecedantMedical;
@@ -12,11 +11,10 @@ import models.antecedantClasses.DossierMedical;
 import models.antecedantClasses.Risque;
 import models.consultation.Consultation;
 import models.consultation.TypeConsultation;
-import models.finance.Facture;
 import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
+import services.DossierMedicalService;
 import services.PatientService;
-import services.ServiceDossierMedical;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -28,24 +26,22 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class ContentPanel extends JPanel {
-    FileDatabase filedatabase;
+    PatientDao patientDao;
     PatientService patientService;
     DossierDao dossierDao;
-    ServiceDossierMedical serviceDossierMedical;
+    DossierMedicalService dossierMedicalService;
     private Patient newPatient;
     private Consultation consultation = new Consultation();
     private DossierMedical dossierMedical = new DossierMedical();
 
-    public ContentPanel(FileDatabase filedatabase) {
+    public ContentPanel(PatientDao patientDao, DossierDao dossierDao) {
         setLayout(null);
-        this.filedatabase = filedatabase;
+        this.patientDao = patientDao;
         this.dossierDao = new DossierDao();
-        this.patientService = new PatientService(filedatabase);
-        this.serviceDossierMedical = new ServiceDossierMedical(dossierDao);
-
+        this.patientService = new PatientService(patientDao);
+        this.dossierMedicalService = new DossierMedicalService(dossierDao);
         profileContent();
     }
 
@@ -192,7 +188,6 @@ public class ContentPanel extends JPanel {
 
 
                 // Create a Patient object
-                // DossierMedical(ArrayList<Consultation> consultations, LocalDate dateCreation, Patient patient, SituationFinanciere situationFinanciere, StatutPaiement statutPaiement) {
                 dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
 
                 AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
@@ -208,8 +203,8 @@ public class ContentPanel extends JPanel {
                         dossierMedical.setPatient(newPatient);
                         //newPatient.setDossierMedical(dossierMedical);
                         patientService.addPatient(newPatient);
-                        serviceDossierMedical.addDossier(dossierMedical);
-                        System.out.println(serviceDossierMedical.getAllDossiers());
+                        dossierMedicalService.addDossier(dossierMedical);
+                        System.out.println(dossierMedicalService.getAllDossiers());
 
 //                        System.out.println(patientService.getAllPatients());
                         System.out.println("Patient added: " + newPatient);
