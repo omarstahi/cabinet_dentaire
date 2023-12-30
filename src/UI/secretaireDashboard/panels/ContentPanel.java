@@ -1,4 +1,4 @@
-package UI.dentistDashboard.panels;
+package UI.secretaireDashboard.panels;
 
 import Database.dao.DossierDao;
 import Database.dao.PatientDao;
@@ -6,13 +6,11 @@ import Static.Themes;
 import UI.AlternatingRowColorRenderer;
 import models.Mutuelle;
 import models.Patient;
-import models.acte.CategorieActe;
 import models.antecedantClasses.AntecedantMedical;
 import models.antecedantClasses.CategorieAntecedentMedicaux;
 import models.antecedantClasses.DossierMedical;
 import models.antecedantClasses.Risque;
 import models.consultation.Consultation;
-import models.consultation.TypeConsultation;
 import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
 import services.DossierMedicalService;
@@ -230,38 +228,9 @@ public class ContentPanel extends JPanel {
 
     public void caisseContent() {
         removeAll();
-        setLayout(new BorderLayout());
-
-        ArrayList<Patient> patients = patientService.getAllPatients();
-        String[] columnNames = {"ID facture", "Date", "Patient", "Montant"};
-        Object[][] data = new Object[patients.size()][columnNames.length];
-
-        for (int i = 0; i < patients.size(); i++) {
-            Patient patient = patients.get(i);
-            data[i][0] = patient.getId();
-            data[i][1] = patient.getNom() + " " + patient.getPrenom();
-            data[i][2] = patient.getTelephone();
-            data[i][3] = patient.getAdresse();
-        }
-
-        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
-
-        JTable patientTable = new JTable(tableModel);
-        patientTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
-        JTableHeader header = patientTable.getTableHeader();
-        header.setBackground(Themes.BUTTONCOLOR);
-        header.setForeground(Color.WHITE);
-
-        JScrollPane tableScrollPane = new JScrollPane(patientTable);
-        add(tableScrollPane, BorderLayout.CENTER);
-
-        ListSelectionModel selectionModel = patientTable.getSelectionModel();
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
         revalidate();
         repaint();
     }
-
 
     public void displayPatients(DossierMedical dossierMedical) {
         //removeAll();
@@ -314,79 +283,33 @@ public class ContentPanel extends JPanel {
     public void dossierMedicalContent(String patientId) {
         removeAll();
 
-        JPanel topPanel = new JPanel(new GridLayout(1, 1));
-        JPanel bottomPanel = new JPanel(new GridLayout(0, 4, 5, 40));
-        topPanel.setBackground(Color.WHITE);
-        ImageIcon imageIcon = new ImageIcon("src/Static/images/dents.png");
-        JLabel imageLabel = new JLabel(imageIcon);
-        topPanel.add(imageLabel);
 
-        // Form
-        JLabel dentLabel = new JLabel("N-Dent:");
-        dentLabel.setFont(Themes.DEFAULTFONT);
-        JTextField dentField = new JTextField();
+        // Create three panels
+        JPanel leftPanel = new JPanel();
+        JPanel topRightPanel = new JPanel(new GridLayout(1, 1));
+        JPanel bottomRightPanel = new JPanel(new GridLayout(1, 1));
 
-        JLabel prixBaseLabel = new JLabel("Prix de base:");
-        prixBaseLabel.setFont(Themes.DEFAULTFONT);
-        JTextField prixBaseField = new JTextField();
+        // Set background colors
+        leftPanel.setBackground(Color.WHITE);
+        topRightPanel.setBackground(Color.RED);
+        bottomRightPanel.setBackground(Color.BLUE);
 
-        JLabel prixPatientLabel = new JLabel("Prix de patient:");
-        prixPatientLabel.setFont(Themes.DEFAULTFONT);
-        JTextField prixPatientField = new JTextField();
+        // Customize the content of each panel (you can add your components here)
 
-        JLabel noteLabel = new JLabel("Note:");
-        noteLabel.setFont(Themes.DEFAULTFONT);
-        JTextArea noteField = new JTextArea();
+        // Add panels to the main content panel using BorderLayout
+        add(leftPanel, BorderLayout.WEST);
+        add(topRightPanel, BorderLayout.CENTER);
 
-        JLabel acteLabel = new JLabel("Acte:");
-        acteLabel.setFont(Themes.DEFAULTFONT);
-
-
-        JLabel antecedantLabel = new JLabel("Antecedant medical:");
-        antecedantLabel.setFont(Themes.DEFAULTFONT);
-
-        CategorieActe[] acteItems = {
-                CategorieActe.CHIRURGIE,
-                CategorieActe.DIAGNOSTIC,
-                CategorieActe.IMPLANTOLOGIE,
-                CategorieActe.ORTHODONTIE,
-                CategorieActe.PREVENTION,
-                CategorieActe.PROTHESE_DENTAIRE,
-                CategorieActe.SOINS_DES_CARIES,
-                CategorieActe.SOINS_DES_TISSUS_MOUS
-        };
-        JComboBox acteField = new JComboBox(acteItems);
-
-
-
-        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
-        submitButton.setFont(Themes.DEFAULTFONT);
-        submitButton.setBackground(Themes.BUTTONCOLOR);
-
-        bottomPanel.add(acteLabel);
-        bottomPanel.add(acteField);
-        bottomPanel.add(dentLabel);
-        bottomPanel.add(dentField);
-        bottomPanel.add(prixBaseLabel);
-        bottomPanel.add(prixBaseField);
-        bottomPanel.add(prixPatientLabel);
-        bottomPanel.add(prixPatientField);
-
-        bottomPanel.add(noteLabel);
-        bottomPanel.add(noteField);
-        bottomPanel.add(new JLabel());
-        bottomPanel.add(new JLabel());
-        bottomPanel.add(new JLabel());
-        bottomPanel.add(submitButton);
-
-
-
-        add(topPanel, BorderLayout.NORTH);
-        add(bottomPanel, BorderLayout.SOUTH);
+        // Use another BorderLayout for the bottom right panel
+        JPanel rightPanelContainer = new JPanel(new BorderLayout());
+        rightPanelContainer.add(bottomRightPanel, BorderLayout.NORTH);
+        add(rightPanelContainer, BorderLayout.EAST);
 
         revalidate();
         repaint();
     }
+
+
 
 
 
