@@ -3,6 +3,7 @@ package UI.dentistDashboard.panels;
 import Database.dao.DossierDao;
 import Database.dao.PatientDao;
 import Static.Themes;
+import UI.AlternatingRowColorRenderer;
 import models.Mutuelle;
 import models.Patient;
 import models.antecedantClasses.AntecedantMedical;
@@ -20,6 +21,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -208,6 +210,7 @@ public class ContentPanel extends JPanel {
 
 //                        System.out.println(patientService.getAllPatients());
                         System.out.println("Patient added: " + newPatient);
+                        refreshContent();
 
                     } else {
                         System.out.println("PatientService not initialized.");
@@ -234,16 +237,12 @@ public class ContentPanel extends JPanel {
         //removeAll();
         //setLayout(new GridLayout(2,1));
 
-        // Get the list of patients from the database
         ArrayList<Patient> patients = patientService.getAllPatients();
 
-        // Define column names
         String[] columnNames = {"ID", "Full Name", "Phone", "Address", "Birth"};
 
-        // Create a 2D array to hold data for the table
         Object[][] data = new Object[patients.size()][columnNames.length];
 
-        // Populate the data array
         for (int i = 0; i < patients.size(); i++) {
             Patient patient = patients.get(i);
             data[i][0] = patient.getId();
@@ -253,18 +252,16 @@ public class ContentPanel extends JPanel {
             data[i][4] = patient.getDateNaissance();
         }
 
-        // Create a new table model with the data
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
-        // Create a JTable with the table model
         JTable patientTable = new JTable(tableModel);
-
-        // Add the table to a scroll pane
+        patientTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
+        JTableHeader header = patientTable.getTableHeader();
+        header.setBackground(Themes.BUTTONCOLOR);
+        header.setForeground(Color.WHITE);
         JScrollPane tableScrollPane = new JScrollPane(patientTable);
 
-        // Add the scroll pane to the panel
         add(tableScrollPane, BorderLayout.CENTER);
-        // Add a selection listener to the table
         ListSelectionModel selectionModel = patientTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -307,7 +304,12 @@ public class ContentPanel extends JPanel {
 
 
 
-
+    public void refreshContent() {
+        removeAll();
+        patientContent();
+        revalidate();
+        repaint();
+    }
 
 
 
