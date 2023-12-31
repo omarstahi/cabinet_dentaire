@@ -76,4 +76,15 @@ public class InterventionMedecin {
     public void setConsultation(Consultation consultation) {
         this.consultation = consultation;
     }
+
+    @Override
+    public String toString() {
+        return "InterventionMedecin{" +
+                "noteMedecin='" + noteMedecin + '\'' +
+                ", prixPatient=" + prixPatient +
+                ", dent=" + dent +
+                //", acte=" + acte +
+                //", consultation=" + consultation +
+                '}';
+    }
 }

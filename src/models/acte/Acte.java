@@ -3,21 +3,22 @@ package models.acte;
 import models.InterventionMedecin;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Acte {
-    private Long idActe;
+    private String idActe;
     private Long index = 0L;
     private ArrayList<InterventionMedecin> interventions = new ArrayList<>();
     private Double prixDeBase;
     private CategorieActe categorie;
     private String libelle;
 
-    public Long getIdActe() {
+    public String getIdActe() {
         return idActe;
     }
 
     public void setIdActe() {
-        this.idActe = index++;
+        this.idActe = UUID.randomUUID().toString();
     }
 
     public ArrayList<InterventionMedecin> getInterventions() {
@@ -27,6 +28,8 @@ public class Acte {
     public void setInterventions(ArrayList<InterventionMedecin> interventions) {
         this.interventions = interventions;
     }
+
+    public Acte() {}
 
     public Acte(Double prixDeBase, CategorieActe categorie, String libelle) {
         setIdActe();
@@ -58,4 +61,6 @@ public class Acte {
     public void setLibelle(String libelle) {
         this.libelle = libelle;
     }
+
+
 }

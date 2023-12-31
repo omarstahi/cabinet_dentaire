@@ -4,8 +4,10 @@ import Database.dao.DossierDao;
 import Database.dao.PatientDao;
 import Static.Themes;
 import UI.AlternatingRowColorRenderer;
+import models.InterventionMedecin;
 import models.Mutuelle;
 import models.Patient;
+import models.acte.Acte;
 import models.acte.CategorieActe;
 import models.antecedantClasses.AntecedantMedical;
 import models.antecedantClasses.CategorieAntecedentMedicaux;
@@ -185,17 +187,11 @@ public class ContentPanel extends JPanel {
                 Mutuelle selectedMutuelle = (Mutuelle) mutuelleField.getSelectedItem();
                 CategorieAntecedentMedicaux selectedAntecedant = (CategorieAntecedentMedicaux) antecedantField.getSelectedItem();
                 Risque selectedRisque = (Risque) risqueField.getSelectedItem();
-                //System.out.println("name : " + name);
-                // formPanel.add(mutuelleField);
-
-
-
-                // Create a Patient object
-                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
 
                 AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
                 selectedAntecedant.setRisqueAssocie(selectedRisque);
                 try {
+                    dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
                     newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
                     if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
                             phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
@@ -204,7 +200,7 @@ public class ContentPanel extends JPanel {
                     }
                     if (patientService != null) {
                         dossierMedical.setPatient(newPatient);
-                        //newPatient.setDossierMedical(dossierMedical);
+                        newPatient.setDossierMedical(dossierMedical);
                         patientService.addPatient(newPatient);
                         dossierMedicalService.addDossier(dossierMedical);
                         System.out.println(dossierMedicalService.getAllDossiers());
@@ -341,10 +337,6 @@ public class ContentPanel extends JPanel {
         JLabel acteLabel = new JLabel("Acte:");
         acteLabel.setFont(Themes.DEFAULTFONT);
 
-
-        JLabel antecedantLabel = new JLabel("Antecedant medical:");
-        antecedantLabel.setFont(Themes.DEFAULTFONT);
-
         CategorieActe[] acteItems = {
                 CategorieActe.CHIRURGIE,
                 CategorieActe.DIAGNOSTIC,
@@ -357,11 +349,23 @@ public class ContentPanel extends JPanel {
         };
         JComboBox acteField = new JComboBox(acteItems);
 
+        JLabel typeConsultationLabel = new JLabel("Type de consultation:");
+        typeConsultationLabel.setFont(Themes.DEFAULTFONT);
+
+        TypeConsultation[] typeConsultationItems = {
+                TypeConsultation.CONSULTATION_GENERAL,
+                TypeConsultation.SUIVI,
+                TypeConsultation.URGENCE
+        };
+        JComboBox typeConsultationField = new JComboBox(typeConsultationItems);
 
 
         JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
+        JButton factureButton = new JButton("<html><font color='white'>Facture</font></html>");
+        factureButton.setFont(Themes.DEFAULTFONT);
+        factureButton.setBackground(Themes.BUTTONCOLOR);
 
         bottomPanel.add(acteLabel);
         bottomPanel.add(acteField);
@@ -371,23 +375,73 @@ public class ContentPanel extends JPanel {
         bottomPanel.add(prixBaseField);
         bottomPanel.add(prixPatientLabel);
         bottomPanel.add(prixPatientField);
-
+        bottomPanel.add(typeConsultationLabel);
+        bottomPanel.add(typeConsultationField);
         bottomPanel.add(noteLabel);
         bottomPanel.add(noteField);
         bottomPanel.add(new JLabel());
-        bottomPanel.add(new JLabel());
-        bottomPanel.add(new JLabel());
         bottomPanel.add(submitButton);
-
-
+        bottomPanel.add(new JLabel());
+        bottomPanel.add(new JLabel());
+        bottomPanel.add(new JLabel());
+        bottomPanel.add(factureButton);
 
         add(topPanel, BorderLayout.NORTH);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                try {
+                    CategorieActe categorieActe = (CategorieActe) acteField.getSelectedItem();
+                    Long dent = Long.parseLong(dentField.getText());
+                    Double prixBase = Double.parseDouble(prixBaseField.getText());
+                    Double prixPatient = Double.parseDouble(prixPatientField.getText());
+                    TypeConsultation typeConsultation = (TypeConsultation) typeConsultationField.getSelectedItem();
+                    String note = noteField.getText();
+
+                    Patient p = patientService.getPatientById(patientId);
+                    DossierMedical dossier = p.getDossierMedical();
+                    //dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
+
+                    //Consultation(ArrayList<InterventionMedecin> interventions, DossierMedical dossierMedical, LocalDate dateConsultation, TypeConsultation typeConsultation, ArrayList<Facture> factures) {
+                    new Consultation();
+                    //new Acte();
+                    //    public InterventionMedecin(String noteMedecin, Double prixPatient, Long dent, Acte acte, Consultation consultation) {
+                    InterventionMedecin inter = new InterventionMedecin(note, prixPatient, dent, new Acte(), new Consultation());
+                    System.out.println(inter);
+                    //dossier.setConsultations();
+
+                } catch (NumberFormatException exp){
+                    JOptionPane.showMessageDialog(null, "Please fill the fields with valid numbers", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        factureButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                factureContent(patientId);
+
+
+
+
+            }
+        });
         revalidate();
         repaint();
     }
 
+    public void factureContent(String patientId){
+        removeAll();
+
+
+        revalidate();
+        repaint();
+    }
 
 
 
