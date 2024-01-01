@@ -83,11 +83,11 @@ public class Consultation implements Serializable {
     @Override
     public String toString() {
         return "Consultation{" +
-                "interventions=" + interventions +
-                ", dossierMedical=" + dossierMedical +
+                //"interventions=" + interventions +
+                //", dossierMedical=" + dossierMedical +
                 ", dateConsultation=" + dateConsultation +
                 ", typeConsultation=" + typeConsultation +
-                ", factures=" + factures +
+                //", factures=" + factures +
                 '}';
     }
 }

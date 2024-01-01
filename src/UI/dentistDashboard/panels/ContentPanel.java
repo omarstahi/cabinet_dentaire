@@ -1,5 +1,6 @@
 package UI.dentistDashboard.panels;
 
+import Database.dao.ConsultationDao;
 import Database.dao.DossierDao;
 import Database.dao.PatientDao;
 import Static.Themes;
@@ -17,6 +18,7 @@ import models.consultation.Consultation;
 import models.consultation.TypeConsultation;
 import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
+import services.ConsultationService;
 import services.DossierMedicalService;
 import services.PatientService;
 
@@ -37,16 +39,20 @@ public class ContentPanel extends JPanel {
     PatientService patientService;
     DossierDao dossierDao;
     DossierMedicalService dossierMedicalService;
+    ConsultationDao consultationDao;
+    ConsultationService consultationService;
     private Patient newPatient;
     private Consultation consultation = new Consultation();
     private DossierMedical dossierMedical = new DossierMedical();
 
-    public ContentPanel(PatientDao patientDao, DossierDao dossierDao) {
+    public ContentPanel(PatientDao patientDao, DossierDao dossierDao, ConsultationDao consultationDao) {
         setLayout(null);
         this.patientDao = patientDao;
         this.dossierDao = new DossierDao();
+        this.consultationDao = new ConsultationDao();
         this.patientService = new PatientService(patientDao);
         this.dossierMedicalService = new DossierMedicalService(dossierDao);
+        this.consultationService = new ConsultationService(consultationDao);
         profileContent();
     }
 
@@ -311,7 +317,6 @@ public class ContentPanel extends JPanel {
 
     public void dossierMedicalContent(String patientId) {
         removeAll();
-
         JPanel topPanel = new JPanel(new GridLayout(1, 1));
         JPanel bottomPanel = new JPanel(new GridLayout(0, 4, 5, 40));
         topPanel.setBackground(Color.WHITE);
@@ -394,9 +399,6 @@ public class ContentPanel extends JPanel {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-
                 try {
                     CategorieActe categorieActe = (CategorieActe) acteField.getSelectedItem();
                     Long dent = Long.parseLong(dentField.getText());
@@ -416,6 +418,12 @@ public class ContentPanel extends JPanel {
                     inter.setConsultation(consultation);
                     consultation.addIntervention(inter);
                     dossier.addConsultation(consultation);
+                    p.setDossierMedical(dossier);
+                    patientService.updatePatient(p);
+                    dossierMedicalService.updateDossier(dossier);
+                    consultationService.addConsultation(consultation);
+                    System.out.println(consultationService.getAllConsultations());
+
                 } catch (NumberFormatException exp){
                     JOptionPane.showMessageDialog(null, "Please fill the fields with valid numbers", "Error", JOptionPane.ERROR_MESSAGE);
                 }

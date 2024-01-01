@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class SecretaireDashboard extends JFrame {
-    PatientDao patientDao;
+    /*PatientDao patientDao;
     DossierDao dossierDao;
     public SecretaireDashboard() {
         patientDao = new PatientDao();
@@ -64,5 +64,5 @@ public class SecretaireDashboard extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new UI.dentistDashboard.DentistDashboard());
-    }
+    }*/
 }
