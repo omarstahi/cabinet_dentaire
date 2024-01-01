@@ -2,16 +2,16 @@ package models.acte;
 
 import models.InterventionMedecin;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Acte {
+public class Acte implements Serializable {
     private String idActe;
-    private Long index = 0L;
+//    private static final long serialVersionUID = 1L;
     private ArrayList<InterventionMedecin> interventions = new ArrayList<>();
     private Double prixDeBase;
     private CategorieActe categorie;
-    private String libelle;
 
     public String getIdActe() {
         return idActe;
@@ -31,11 +31,11 @@ public class Acte {
 
     public Acte() {}
 
-    public Acte(Double prixDeBase, CategorieActe categorie, String libelle) {
+    public Acte(ArrayList<InterventionMedecin>interventions, Double prixDeBase, CategorieActe categorie) {
         setIdActe();
+        this.interventions = interventions;
         this.prixDeBase = prixDeBase;
         this.categorie = categorie;
-        this.libelle = libelle;
     }
 
     public Double getPrixDeBase() {
@@ -54,13 +54,17 @@ public class Acte {
         this.categorie = categorie;
     }
 
-    public String getLibelle() {
-        return libelle;
+    public void addIntervention(InterventionMedecin interventionMedecin){
+        interventions.add(interventionMedecin);
     }
 
-    public void setLibelle(String libelle) {
-        this.libelle = libelle;
+    @Override
+    public String toString() {
+        return "Acte{" +
+                "idActe='" + idActe + '\'' +
+                ", interventions=" + interventions +
+                ", prixDeBase=" + prixDeBase +
+                ", categorie=" + categorie +
+                '}';
     }
-
-
 }

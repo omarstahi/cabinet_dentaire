@@ -213,8 +213,10 @@ public class ContentPanel extends JPanel {
                         System.out.println("PatientService not initialized.");
                     }
                 } catch (DateTimeParseException exp){
-                    System.out.println("ghjkl");
                     JOptionPane.showMessageDialog(null, "Please fill the date of birth field with the correct format", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (StackOverflowError ignored){
+                    refreshContent();
+
                 }
             }
         });
@@ -403,18 +405,17 @@ public class ContentPanel extends JPanel {
                     TypeConsultation typeConsultation = (TypeConsultation) typeConsultationField.getSelectedItem();
                     String note = noteField.getText();
 
+                    //update dossier medical de patient
                     Patient p = patientService.getPatientById(patientId);
                     DossierMedical dossier = p.getDossierMedical();
-                    //dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
 
-                    //Consultation(ArrayList<InterventionMedecin> interventions, DossierMedical dossierMedical, LocalDate dateConsultation, TypeConsultation typeConsultation, ArrayList<Facture> factures) {
-                    new Consultation();
-                    //new Acte();
-                    //    public InterventionMedecin(String noteMedecin, Double prixPatient, Long dent, Acte acte, Consultation consultation) {
-                    InterventionMedecin inter = new InterventionMedecin(note, prixPatient, dent, new Acte(), new Consultation());
-                    System.out.println(inter);
-                    //dossier.setConsultations();
-
+                    Acte acte = new Acte(new ArrayList<>(), prixBase, categorieActe);
+                    InterventionMedecin inter = new InterventionMedecin(note, prixPatient, dent, acte, new Consultation());
+                    acte.addIntervention(inter);
+                    Consultation consultation = new Consultation(new ArrayList<>(), dossier, LocalDate.now(), typeConsultation, new ArrayList<>());
+                    inter.setConsultation(consultation);
+                    consultation.addIntervention(inter);
+                    dossier.addConsultation(consultation);
                 } catch (NumberFormatException exp){
                     JOptionPane.showMessageDialog(null, "Please fill the fields with valid numbers", "Error", JOptionPane.ERROR_MESSAGE);
                 }

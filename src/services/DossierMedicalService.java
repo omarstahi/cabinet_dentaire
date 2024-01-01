@@ -24,5 +24,5 @@ public class DossierMedicalService {
         return fileDatabase.findAll();
     }
 
-//    public void updatePatient(Patient updatedPatient) {fileDatabase.updatePatient(updatedPatient);}
+    public void updateDossier(DossierMedical updatedDossier) {fileDatabase.update(updatedDossier);}
 }

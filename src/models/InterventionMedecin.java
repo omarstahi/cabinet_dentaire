@@ -2,30 +2,24 @@ package models;
 
 import models.acte.Acte;
 import models.consultation.Consultation;
+import java.io.Serializable;
+import java.util.UUID;
 
-public class InterventionMedecin {
-    private Long idIntervention;
-    private static Long index = 0L;
+public class InterventionMedecin implements Serializable {
+    private String idIntervention;
+//    private static final long serialVersionUID = 1L;
     private String noteMedecin;
     private Double prixPatient;
     private Long dent;
     private Acte acte;
     private Consultation consultation;
 
-    public Long getIdIntervention() {
+    public String getIdIntervention() {
         return idIntervention;
     }
 
     public void setIdIntervention() {
-        this.idIntervention = index++;
-    }
-
-    public static Long getIndex() {
-        return index;
-    }
-
-    public static void setIndex(Long index) {
-        InterventionMedecin.index = index;
+        this.idIntervention = UUID.randomUUID().toString();
     }
 
     public String getNoteMedecin() {
@@ -83,8 +77,8 @@ public class InterventionMedecin {
                 "noteMedecin='" + noteMedecin + '\'' +
                 ", prixPatient=" + prixPatient +
                 ", dent=" + dent +
-                //", acte=" + acte +
-                //", consultation=" + consultation +
+                ", acte=" + acte +
+                ", consultation=" + consultation +
                 '}';
     }
 }

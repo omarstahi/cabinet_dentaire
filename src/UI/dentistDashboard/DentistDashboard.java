@@ -49,7 +49,7 @@ public class DentistDashboard extends JFrame {
 
         add(mainPanel);
 
-        setLocationRelativeTo(null); // Center the JFrame
+        setLocationRelativeTo(null);
         setVisible(true);
 
     }

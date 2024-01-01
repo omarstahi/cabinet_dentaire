@@ -89,7 +89,7 @@ public class DossierMedical implements Serializable {
     @Override
     public String toString() {
         return "DossierMedical{" +
-       //         "Consultations=" + Consultations +
+                "Consultations=" + Consultations +
          //       ", dateCreation=" + dateCreation +
                 ", patient=" + patient +
                 '}';
