@@ -4,12 +4,14 @@ import models.consultation.Consultation;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Facture {
     private Double montantRestant;
-    private  SituationFinanciere situationFinanciere;
+    private SituationFinanciere situationFinanciere;
     private Double montantPaye;
-    private  Long idFacture;
+    private String idFacture;
+    private StatutPaiement statutPaiement;
     private LocalDate dateFactureation;
     private Double MontantTotal ;
     private Consultation consultation;
@@ -18,15 +20,16 @@ public class Facture {
     public Facture() {
     }
 
-    public Facture(Double montantRestant, SituationFinanciere situationFinanciere, Double montantPaye, Long idFacture, LocalDate dateFactureation, Double montantTotal, Consultation consultation, TypePaiement typePaiement) {
+    public Facture(StatutPaiement statutPaiement, Double montantRestant, SituationFinanciere situationFinanciere, Double montantPaye, LocalDate dateFactureation, Double montantTotal, Consultation consultation, TypePaiement typePaiement) {
         this.montantRestant = montantRestant;
         this.situationFinanciere = situationFinanciere;
         this.montantPaye = montantPaye;
-        this.idFacture = idFacture;
+        this.idFacture = UUID.randomUUID().toString();
         this.dateFactureation = dateFactureation;
-        MontantTotal = montantTotal;
+        this.MontantTotal = montantTotal;
         this.consultation = consultation;
         this.typePaiement = typePaiement;
+        this.statutPaiement = statutPaiement;
     }
 
     public Double getMontantRestant() {
@@ -53,12 +56,8 @@ public class Facture {
         this.montantPaye = montantPaye;
     }
 
-    public Long getIdFacture() {
+    public String getIdFacture() {
         return idFacture;
-    }
-
-    public void setIdFacture(Long idFacture) {
-        this.idFacture = idFacture;
     }
 
     public LocalDate getDateFactureation() {
@@ -91,6 +90,14 @@ public class Facture {
 
     public void setTypePaiement(TypePaiement typePaiement) {
         this.typePaiement = typePaiement;
+    }
+
+    public StatutPaiement getStatutPaiement() {
+        return statutPaiement;
+    }
+
+    public void setStatutPaiement(StatutPaiement statutPaiement) {
+        this.statutPaiement = statutPaiement;
     }
 
     @Override

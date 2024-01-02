@@ -13,7 +13,7 @@ public class SituationFinanciere implements Serializable {
     private LocalDate dateCreation;
     private Double montantGlobalRestant;
     private Long idSDituationFinancier;
-    private Double montantGolbalePaye;
+    private Double montantGlobalePaye;
     private List<Facture> factures = new ArrayList<Facture>();
 
     public SituationFinanciere() {
@@ -24,7 +24,7 @@ public class SituationFinanciere implements Serializable {
         this.dateCreation = dateCreation;
         this.montantGlobalRestant = montantGlobalRestant;
         this.idSDituationFinancier = idSDituationFinancier;
-        this.montantGolbalePaye = montantGolbalePaye;
+        this.montantGlobalePaye = montantGolbalePaye;
         this.factures = factures;
     }
 
@@ -48,8 +48,12 @@ public class SituationFinanciere implements Serializable {
         return montantGlobalRestant;
     }
 
-    public void setMontantGlobalRestant(Double montantGlobalRestant) {
-        this.montantGlobalRestant = montantGlobalRestant;
+    public void setMontantGlobalRestant() {
+        Double montantRestant = 0.0;
+        for(Facture facture : factures){
+            montantRestant += facture.getMontantRestant();
+        }
+        this.montantGlobalRestant = montantRestant;
     }
 
     public Long getIdSDituationFinancier() {
@@ -61,11 +65,15 @@ public class SituationFinanciere implements Serializable {
     }
 
     public Double getMontantGolbalePaye() {
-        return montantGolbalePaye;
+        return montantGlobalePaye;
     }
 
     public void setMontantGolbalePaye(Double montantGolbalePaye) {
-        this.montantGolbalePaye = montantGolbalePaye;
+        Double montantPaye = 0.0;
+        for(Facture facture : factures){
+            montantPaye += facture.getMontantPaye();
+        }
+        this.montantGlobalePaye = montantPaye;
     }
 
     public List<Facture> getFactures() {
@@ -83,7 +91,7 @@ public class SituationFinanciere implements Serializable {
                 ", dateCreation=" + dateCreation +
                 ", montantGlobalRestant=" + montantGlobalRestant +
                 ", idSDituationFinancier=" + idSDituationFinancier +
-                ", montantGolbalePaye=" + montantGolbalePaye +
+                ", montantGolbalePaye=" + montantGlobalePaye +
                 ", factures=" + factures +
                 '}';
     }
@@ -93,11 +101,11 @@ public class SituationFinanciere implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SituationFinanciere that = (SituationFinanciere) o;
-        return Objects.equals(dossierMedical, that.dossierMedical) && Objects.equals(dateCreation, that.dateCreation) && Objects.equals(montantGlobalRestant, that.montantGlobalRestant) && Objects.equals(idSDituationFinancier, that.idSDituationFinancier) && Objects.equals(montantGolbalePaye, that.montantGolbalePaye) && Objects.equals(factures, that.factures);
+        return Objects.equals(dossierMedical, that.dossierMedical) && Objects.equals(dateCreation, that.dateCreation) && Objects.equals(montantGlobalRestant, that.montantGlobalRestant) && Objects.equals(idSDituationFinancier, that.idSDituationFinancier) && Objects.equals(montantGlobalePaye, that.montantGlobalePaye) && Objects.equals(factures, that.factures);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dossierMedical, dateCreation, montantGlobalRestant, idSDituationFinancier, montantGolbalePaye, factures);
+        return Objects.hash(dossierMedical, dateCreation, montantGlobalRestant, idSDituationFinancier, montantGlobalePaye, factures);
     }
 }

@@ -18,6 +18,7 @@ import models.consultation.Consultation;
 import models.consultation.TypeConsultation;
 import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
+import models.finance.TypePaiement;
 import services.ConsultationService;
 import services.DossierMedicalService;
 import services.PatientService;
@@ -30,6 +31,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -431,28 +433,159 @@ public class ContentPanel extends JPanel {
         });
 
         factureButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                factureContent(patientId);
-
-
-
-
+                factureContent(patientId, Double.parseDouble(prixPatientField.getText()));
             }
         });
         revalidate();
         repaint();
     }
 
-    public void factureContent(String patientId){
+    public void factureContent(String patientId, Double prixPatient){
         removeAll();
+        //get dossier and consltations of the patient
+        setLayout(new GridLayout(2,1));
+        // Create a panel to hold the components
+        JPanel patientPanel = new JPanel(new GridLayout(1, 1));
 
+
+        // Form
+        JPanel formPanel = new JPanel(new GridLayout(0, 4, 5, 55));
+        JLabel montantPayeLabel = new JLabel("First Name:");
+        montantPayeLabel.setFont(Themes.DEFAULTFONT);
+        JTextField montantPayeField = new JTextField();
+
+        JLabel resteAPayeLabel = new JLabel("Last name:");
+        resteAPayeLabel.setFont(Themes.DEFAULTFONT);
+        JTextField resteAPayeField = new JTextField();
+
+        JLabel totalLabel = new JLabel("Address:");
+        totalLabel.setFont(Themes.DEFAULTFONT);
+        JTextField totalField = new JTextField();
+
+        JLabel statutDeFactureLabel = new JLabel("Statut de payment:");
+        statutDeFactureLabel.setFont(Themes.DEFAULTFONT);
+
+        JLabel typePayementLabel = new JLabel("Type de payment:");
+        typePayementLabel.setFont(Themes.DEFAULTFONT);
+
+        StatutPaiement[] statutItems = {StatutPaiement.IMPAYE, StatutPaiement.EN_ATTENTTE, StatutPaiement.PAYE};
+        JComboBox statutField = new JComboBox(statutItems);
+
+        TypePaiement[] typePayementItems = {TypePaiement.CARTE_CREDIT, TypePaiement.CHEQUE, TypePaiement.ESPECE, TypePaiement.VIREMENT, TypePaiement.AUTRE};
+        JComboBox typePayementField = new JComboBox(typePayementItems);
+
+
+        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
+        submitButton.setFont(Themes.DEFAULTFONT);
+        submitButton.setBackground(Themes.BUTTONCOLOR);
+
+        formPanel.add(statutDeFactureLabel);
+        formPanel.add(statutField);
+        formPanel.add(typePayementLabel);
+        formPanel.add(typePayementField);
+        formPanel.add(montantPayeLabel);
+        formPanel.add(montantPayeField);
+        formPanel.add(resteAPayeLabel);
+        formPanel.add(resteAPayeField);
+        formPanel.add(totalLabel);
+        formPanel.add(totalField);
+        formPanel.add(new JLabel());
+        formPanel.add(submitButton);
+
+        patientPanel.add(formPanel);
+
+        add(patientPanel, BorderLayout.CENTER);
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the entered information
+                StatutPaiement selectedStatut = (StatutPaiement) statutField.getSelectedItem();
+                TypePaiement selectedType = (TypePaiement) typePayementField.getSelectedItem();
+                Double montantPaye = Double.parseDouble(montantPayeField.getText());
+                Double resteAPaye = Double.parseDouble(resteAPayeField.getText());
+                Double total = Double.parseDouble(totalField.getText());
+
+                try {
+                    dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
+                  //  newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
+                    if (montantPaye.isNaN() || resteAPaye.isNaN() || total.isNaN()) {
+                        JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
+                        return;  // Exit the method if any field is empty
+                    }
+                    if (patientService != null) {
+                        //dossierMedical.setPatient(newPatient);
+                        //newPatient.setDossierMedical(dossierMedical);
+                        //patientService.addPatient(newPatient);
+                        //dossierMedicalService.addDossier(dossierMedical);
+                        //System.out.println(dossierMedicalService.getAllDossiers());
+
+                        refreshContent();
+
+                    } else {
+                        System.out.println("PatientService not initialized.");
+                    }
+                } catch (StackOverflowError ignored){
+                    refreshContent();
+                }
+            }
+        });
+        displayPatients(dossierMedical);
 
         revalidate();
         repaint();
     }
 
 
+    public void displayFactures(Consultation consultation) {
+        //removeAll();
+        //setLayout(new GridLayout(2,1));
+
+        ArrayList<Patient> patients = patientService.getAllPatients();
+
+        String[] columnNames = {"ID", "Full Name", "Phone", "Address", "Birth"};
+
+        Object[][] data = new Object[patients.size()][columnNames.length];
+
+        for (int i = 0; i < patients.size(); i++) {
+            Patient patient = patients.get(i);
+            data[i][0] = patient.getId();
+            data[i][1] = patient.getNom() + " " + patient.getPrenom();
+            data[i][2] = patient.getTelephone();
+            data[i][3] = patient.getAdresse();
+            data[i][4] = patient.getDateNaissance();
+        }
+
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
+
+        JTable patientTable = new JTable(tableModel);
+        patientTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
+        JTableHeader header = patientTable.getTableHeader();
+        header.setBackground(Themes.BUTTONCOLOR);
+        header.setForeground(Color.WHITE);
+        JScrollPane tableScrollPane = new JScrollPane(patientTable);
+
+        add(tableScrollPane, BorderLayout.CENTER);
+        ListSelectionModel selectionModel = patientTable.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = patientTable.getSelectedRow();
+
+                    if (selectedRow != -1) {
+                        // Retrieve the patient ID from the selected row
+                        Object patientId = patientTable.getValueAt(selectedRow, 0);
+                        dossierMedicalContent((String)patientId);
+                    }
+                }
+            }
+        });
+    }
 
 
 
