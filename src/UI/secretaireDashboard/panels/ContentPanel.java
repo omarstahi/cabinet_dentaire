@@ -189,7 +189,7 @@ public class ContentPanel extends JPanel {
 
 
                 // Create a Patient object
-                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere(), StatutPaiement.IMPAYE);
+                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere());
 
                 AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
                 selectedAntecedant.setRisqueAssocie(selectedRisque);

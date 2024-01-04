@@ -2,11 +2,12 @@ package models.finance;
 
 import models.consultation.Consultation;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Facture {
+public class Facture implements Serializable {
     private Double montantRestant;
     private SituationFinanciere situationFinanciere;
     private Double montantPaye;
@@ -104,12 +105,12 @@ public class Facture {
     public String toString() {
         return "Facture{" +
                 "montantRestant=" + montantRestant +
-                ", situationFinanciere=" + situationFinanciere +
+                //", situationFinanciere=" + situationFinanciere +
                 ", montantPaye=" + montantPaye +
-                ", idFacture=" + idFacture +
+                //", idFacture=" + idFacture +
                 ", dateFactureation=" + dateFactureation +
                 ", MontantTotal=" + MontantTotal +
-                ", consultation=" + consultation +
+                //", consultation=" + consultation +
                 ", typePaiement=" + typePaiement +
                 '}';
     }

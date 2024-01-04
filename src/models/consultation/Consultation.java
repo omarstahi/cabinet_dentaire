@@ -74,10 +74,15 @@ public class Consultation implements Serializable {
         this.dateConsultation = dateConsultation;
         this.typeConsultation = typeConsultation;
         this.factures = factures;
+        this.idConsultation = UUID.randomUUID().toString();
     }
 
     public void addIntervention(InterventionMedecin interventionMedecin){
         interventions.add(interventionMedecin);
+    }
+
+    public void addFacture(Facture facture){
+        factures.add(facture);
     }
 
     @Override
@@ -87,7 +92,7 @@ public class Consultation implements Serializable {
                 //", dossierMedical=" + dossierMedical +
                 ", dateConsultation=" + dateConsultation +
                 ", typeConsultation=" + typeConsultation +
-                //", factures=" + factures +
+                ", factures=" + factures +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package UI.dentistDashboard;
 
 import Database.dao.ConsultationDao;
 import Database.dao.DossierDao;
+import Database.dao.FactureDao;
 import Database.dao.PatientDao;
 import UI.dentistDashboard.panels.ContentPanel;
 import UI.dentistDashboard.panels.NavbarPanel;
@@ -16,10 +17,12 @@ public class DentistDashboard extends JFrame {
     PatientDao patientDao;
     DossierDao dossierDao;
     ConsultationDao consultationDao;
+    FactureDao factureDao;
     public DentistDashboard() {
         patientDao = new PatientDao();
         dossierDao = new DossierDao();
         consultationDao = new ConsultationDao();
+        factureDao = new FactureDao();
         setTitle("Dentist Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1100, 700);
