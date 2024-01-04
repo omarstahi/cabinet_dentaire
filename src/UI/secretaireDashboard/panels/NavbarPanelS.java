@@ -7,10 +7,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NavbarPanel extends JPanel {
-    private ContentPanel contentPanel;
+public class NavbarPanelS extends JPanel {
+    private ContentPanelS contentPanel;
 
-    public NavbarPanel(ContentPanel contentPanel) {
+    public NavbarPanelS(ContentPanelS contentPanel) {
         this.contentPanel = contentPanel;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Themes.BUTTONCOLOR);

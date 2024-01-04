@@ -1,9 +1,10 @@
 package UI.secretaireDashboard;
 
 import Database.dao.DossierDao;
+import Database.dao.FactureDao;
 import Database.dao.PatientDao;
-import UI.dentistDashboard.panels.ContentPanel;
-import UI.dentistDashboard.panels.NavbarPanel;
+import UI.secretaireDashboard.panels.ContentPanelS;
+import UI.secretaireDashboard.panels.NavbarPanelS;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -12,17 +13,19 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class SecretaireDashboard extends JFrame {
-    /*PatientDao patientDao;
+    PatientDao patientDao;
     DossierDao dossierDao;
+    FactureDao factureDao;
     public SecretaireDashboard() {
         patientDao = new PatientDao();
         dossierDao = new DossierDao();
+        factureDao = new FactureDao();
         setTitle("Dentist Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1100, 700);
 
-        ContentPanel contentPanel = new ContentPanel(patientDao, dossierDao);
-        NavbarPanel navbarPanel = new NavbarPanel(contentPanel);
+        ContentPanelS contentPanel = new ContentPanelS(patientDao, dossierDao, factureDao);
+        NavbarPanelS navbarPanel = new NavbarPanelS(contentPanel);
 
         JPanel topPanel = new JPanel(new BorderLayout());
 
@@ -64,5 +67,5 @@ public class SecretaireDashboard extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new UI.dentistDashboard.DentistDashboard());
-    }*/
+    }
 }

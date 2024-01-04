@@ -1,6 +1,7 @@
 package UI.secretaireDashboard.panels;
 
 import Database.dao.DossierDao;
+import Database.dao.FactureDao;
 import Database.dao.PatientDao;
 import Static.Themes;
 import UI.AlternatingRowColorRenderer;
@@ -10,10 +11,10 @@ import models.antecedantClasses.AntecedantMedical;
 import models.antecedantClasses.CategorieAntecedentMedicaux;
 import models.antecedantClasses.DossierMedical;
 import models.antecedantClasses.Risque;
-import models.consultation.Consultation;
+import models.finance.Facture;
 import models.finance.SituationFinanciere;
-import models.finance.StatutPaiement;
 import services.DossierMedicalService;
+import services.FactureService;
 import services.PatientService;
 
 import javax.swing.*;
@@ -28,21 +29,24 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
-public class ContentPanel extends JPanel {
+public class ContentPanelS extends JPanel {
     PatientDao patientDao;
     PatientService patientService;
     DossierDao dossierDao;
     DossierMedicalService dossierMedicalService;
+    FactureDao factureDao;
+    FactureService factureService;
     private Patient newPatient;
-    private Consultation consultation = new Consultation();
     private DossierMedical dossierMedical = new DossierMedical();
 
-    public ContentPanel(PatientDao patientDao, DossierDao dossierDao) {
+    public ContentPanelS(PatientDao patientDao, DossierDao dossierDao, FactureDao factureDao) {
         setLayout(null);
         this.patientDao = patientDao;
         this.dossierDao = new DossierDao();
+        this.factureDao = new FactureDao();
         this.patientService = new PatientService(patientDao);
         this.dossierMedicalService = new DossierMedicalService(dossierDao);
+        this.factureService = new FactureService(factureDao);
         profileContent();
     }
 
@@ -226,11 +230,65 @@ public class ContentPanel extends JPanel {
         repaint();
     }
 
+
     public void caisseContent() {
         removeAll();
+        setLayout(new BorderLayout());
+
+        ArrayList<Facture> factures = factureService.getAllFactures();
+        String[] columnNames = {"ID facture", "Date", "Type de paiement", "Montant"};
+        Object[][] data = new Object[factures.size()][columnNames.length];
+
+        for (int i = 0; i < factures.size(); i++) {
+            Facture facture = factures.get(i);
+            data[i][0] = facture.getIdFacture();
+            data[i][1] = facture.getDateFactureation();
+            data[i][2] = facture.getTypePaiement();
+            data[i][3] = facture.getMontantTotal();
+        }
+
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
+
+        JTable factureTable = new JTable(tableModel);
+        factureTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
+        JTableHeader header = factureTable.getTableHeader();
+        header.setBackground(Themes.BUTTONCOLOR);
+        header.setForeground(Color.WHITE);
+
+        JScrollPane tableScrollPane = new JScrollPane(factureTable);
+        add(tableScrollPane, BorderLayout.CENTER);
+
+        ListSelectionModel selectionModel = factureTable.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        Double recetteDeJour = 0.0;
+        Double recetteDeMois = 0.0;
+        Double recetteDeAnnee = 0.0;
+        LocalDate currentDate = LocalDate.now();
+
+        for (Facture facture : factures) {
+            if (facture.getDateFactureation().equals(currentDate)) recetteDeJour += facture.getMontantPaye();
+            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear())
+                recetteDeMois += facture.getMontantPaye();
+            if (facture.getDateFactureation().getYear() == currentDate.getYear()) recetteDeAnnee += facture.getMontantPaye();
+        }
+
+        JLabel recetteJourLabel = new JLabel("Recette de jour : " + recetteDeJour + "                ");
+        JLabel recetteMoisLabel = new JLabel("Recette de mois : " + recetteDeMois + "                ");
+        JLabel recetteAnneeLabel = new JLabel("Recette d'année : " + recetteDeAnnee);
+
+        JPanel recettePanel = new JPanel();
+        recettePanel.setLayout(new FlowLayout());
+        recettePanel.add(recetteJourLabel);
+        recettePanel.add(recetteMoisLabel);
+        recettePanel.add(recetteAnneeLabel);
+
+        add(recettePanel, BorderLayout.SOUTH);
+
         revalidate();
         repaint();
     }
+
 
     public void displayPatients(DossierMedical dossierMedical) {
         //removeAll();
@@ -271,48 +329,117 @@ public class ContentPanel extends JPanel {
                     int selectedRow = patientTable.getSelectedRow();
 
                     if (selectedRow != -1) {
-                        // Retrieve the patient ID from the selected row
-                        Object patientId = patientTable.getValueAt(selectedRow, 0);
-                        dossierMedicalContent((String)patientId);
+                        // Retrieve the patient from the selected row
+                        Patient selectedPatient = patients.get(selectedRow);
+
+                        // Call the update method with the selected patient
+                        updatePatientContent(selectedPatient);
                     }
                 }
             }
         });
     }
 
-    public void dossierMedicalContent(String patientId) {
-        removeAll();
+
+        private void updatePatientContent(Patient patient) {
+            removeAll();
+            setLayout(new GridLayout(1, 1));
+
+            // Create a panel to hold the components
+            JPanel updatePanel = new JPanel(new GridLayout(1, 1));
+
+            // Form
+            JPanel formPanel = new JPanel(new GridLayout(0, 4, 60, 60));
+
+            JLabel firstNameLabel = new JLabel("First Name:");
+            firstNameLabel.setFont(Themes.DEFAULTFONT);
+            JTextField firstNameField = new JTextField();
+
+            JLabel lastNameLabel = new JLabel("Last name:");
+            lastNameLabel.setFont(Themes.DEFAULTFONT);
+            JTextField lastNameField = new JTextField();
+
+            JLabel addressLabel = new JLabel("Address:");
+            addressLabel.setFont(Themes.DEFAULTFONT);
+            JTextField addressField = new JTextField();
+
+            JLabel phoneLabel = new JLabel("Phone:");
+            phoneLabel.setFont(Themes.DEFAULTFONT);
+            JTextField phoneField = new JTextField();
+
+            JLabel emailLabel = new JLabel("Email:");
+            emailLabel.setFont(Themes.DEFAULTFONT);
+            JTextField emailField = new JTextField();
+
+            JLabel cinLabel = new JLabel("CIN:");
+            cinLabel.setFont(Themes.DEFAULTFONT);
+            JTextField cinField = new JTextField();
 
 
-        // Create three panels
-        JPanel leftPanel = new JPanel();
-        JPanel topRightPanel = new JPanel(new GridLayout(1, 1));
-        JPanel bottomRightPanel = new JPanel(new GridLayout(1, 1));
+            firstNameField.setText(patient.getNom());
+            lastNameField.setText(patient.getPrenom());
+            addressField.setText(patient.getAdresse());
+            phoneField.setText(patient.getTelephone());
+            emailField.setText(patient.getEmail());
+            cinField.setText(patient.getCin());
+            JButton updateButton = new JButton("<html><font color='white'>Update</font></html>");
+            updateButton.setFont(Themes.DEFAULTFONT);
+            updateButton.setBackground(Themes.BUTTONCOLOR);
+            formPanel.add(firstNameLabel);
+            formPanel.add(firstNameField);
+            formPanel.add(lastNameLabel);
+            formPanel.add(lastNameField);
+            formPanel.add(addressLabel);
+            formPanel.add(addressField);
+            formPanel.add(phoneLabel);
+            formPanel.add(phoneField);
+            formPanel.add(emailLabel);
+            formPanel.add(emailField);
+            formPanel.add(cinLabel);
+            formPanel.add(cinField);
+            formPanel.add(new JLabel());
+            formPanel.add(updateButton);
+            formPanel.add(new JLabel());
+            formPanel.add(new JLabel());
+            formPanel.add(new JLabel());
+            formPanel.add(new JLabel());
+            formPanel.add(new JLabel());
+            formPanel.add(new JLabel());
+            formPanel.add(new JLabel());
+            formPanel.add(new JLabel());
 
-        // Set background colors
-        leftPanel.setBackground(Color.WHITE);
-        topRightPanel.setBackground(Color.RED);
-        bottomRightPanel.setBackground(Color.BLUE);
-
-        // Customize the content of each panel (you can add your components here)
-
-        // Add panels to the main content panel using BorderLayout
-        add(leftPanel, BorderLayout.WEST);
-        add(topRightPanel, BorderLayout.CENTER);
-
-        // Use another BorderLayout for the bottom right panel
-        JPanel rightPanelContainer = new JPanel(new BorderLayout());
-        rightPanelContainer.add(bottomRightPanel, BorderLayout.NORTH);
-        add(rightPanelContainer, BorderLayout.EAST);
-
-        revalidate();
-        repaint();
-    }
 
 
+            updatePanel.add(formPanel);
 
+            add(updatePanel, BorderLayout.CENTER);
 
+            updateButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Get the updated information
+                    String updatedFirstName = firstNameField.getText();
+                    String updatedLastName = lastNameField.getText();
+                    String updatedAdresse = addressField.getText();
+                    String updatedPhone = phoneField.getText();
+                    String updatedEmail = emailField.getText();
+                    String updatedCIN = cinField.getText();
+                    patient.setNom(updatedFirstName);
+                    patient.setPrenom(updatedLastName);
+                    patient.setAdresse(updatedAdresse);
+                    patient.setTelephone(updatedPhone);
+                    patient.setEmail(updatedEmail);
+                    patient.setCin(updatedCIN);
+                    patientService.updatePatient(patient);
+                    refreshContent();
+                }
+            });
 
+            revalidate();
+            repaint();
+        }
+
+        // ... existing code ...
 
 
 

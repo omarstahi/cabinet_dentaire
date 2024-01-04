@@ -1,7 +1,7 @@
 package UI.Login.Panels;
 import Static.Themes;
 import UI.dentistDashboard.DentistDashboard;
-import UI.sec.SecretaireDashboard;
+import UI.secretaireDashboard.SecretaireDashboard;
 
 import javax.swing.*;
 import java.awt.*;

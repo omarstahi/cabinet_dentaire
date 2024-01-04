@@ -270,7 +270,6 @@ public class ContentPanel extends JPanel {
         ListSelectionModel selectionModel = factureTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Calculate recettes
         Double recetteDeJour = 0.0;
         Double recetteDeMois = 0.0;
         Double recetteDeAnnee = 0.0;
@@ -283,7 +282,6 @@ public class ContentPanel extends JPanel {
             if (facture.getDateFactureation().getYear() == currentDate.getYear()) recetteDeAnnee += facture.getMontantPaye();
         }
 
-        // Create labels or a panel to display recette information
         JLabel recetteJourLabel = new JLabel("Recette de jour : " + recetteDeJour + "                ");
         JLabel recetteMoisLabel = new JLabel("Recette de mois : " + recetteDeMois + "                ");
         JLabel recetteAnneeLabel = new JLabel("Recette d'année : " + recetteDeAnnee);
@@ -586,53 +584,6 @@ public class ContentPanel extends JPanel {
     }
 
 
-    public void displayFactures(Consultation consultation) {
-        //removeAll();
-        //setLayout(new GridLayout(2,1));
-
-        ArrayList<Patient> patients = patientService.getAllPatients();
-
-        String[] columnNames = {"ID", "Full Name", "Phone", "Address", "Birth"};
-
-        Object[][] data = new Object[patients.size()][columnNames.length];
-
-        for (int i = 0; i < patients.size(); i++) {
-            Patient patient = patients.get(i);
-            data[i][0] = patient.getId();
-            data[i][1] = patient.getNom() + " " + patient.getPrenom();
-            data[i][2] = patient.getTelephone();
-            data[i][3] = patient.getAdresse();
-            data[i][4] = patient.getDateNaissance();
-        }
-
-        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
-
-        JTable patientTable = new JTable(tableModel);
-        patientTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
-        JTableHeader header = patientTable.getTableHeader();
-        header.setBackground(Themes.BUTTONCOLOR);
-        header.setForeground(Color.WHITE);
-        JScrollPane tableScrollPane = new JScrollPane(patientTable);
-
-        add(tableScrollPane, BorderLayout.CENTER);
-        ListSelectionModel selectionModel = patientTable.getSelectionModel();
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    int selectedRow = patientTable.getSelectedRow();
-
-                    if (selectedRow != -1) {
-                        // Retrieve the patient ID from the selected row
-                        Object patientId = patientTable.getValueAt(selectedRow, 0);
-                        dossierMedicalContent((String)patientId);
-                    }
-                }
-            }
-        });
-    }
 
 
 
