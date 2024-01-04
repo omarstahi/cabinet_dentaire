@@ -2,6 +2,7 @@ package UI.dentistDashboard.panels;
 
 import Database.dao.ConsultationDao;
 import Database.dao.DossierDao;
+import Database.dao.FactureDao;
 import Database.dao.PatientDao;
 import Static.Themes;
 import UI.AlternatingRowColorRenderer;
@@ -22,6 +23,7 @@ import models.finance.StatutPaiement;
 import models.finance.TypePaiement;
 import services.ConsultationService;
 import services.DossierMedicalService;
+import services.FactureService;
 import services.PatientService;
 
 import javax.swing.*;
@@ -41,21 +43,25 @@ public class ContentPanel extends JPanel {
     PatientDao patientDao;
     PatientService patientService;
     DossierDao dossierDao;
+    FactureDao factureDao;
     DossierMedicalService dossierMedicalService;
     ConsultationDao consultationDao;
     ConsultationService consultationService;
+    FactureService factureService;
     private Patient newPatient;
     private Consultation consultation = new Consultation();
     private DossierMedical dossierMedical = new DossierMedical();
 
-    public ContentPanel(PatientDao patientDao, DossierDao dossierDao, ConsultationDao consultationDao) {
+    public ContentPanel(PatientDao patientDao, DossierDao dossierDao, ConsultationDao consultationDao, FactureDao factureDao) {
         setLayout(null);
         this.patientDao = patientDao;
         this.dossierDao = new DossierDao();
         this.consultationDao = new ConsultationDao();
+        this.factureDao = new FactureDao();
         this.patientService = new PatientService(patientDao);
         this.dossierMedicalService = new DossierMedicalService(dossierDao);
         this.consultationService = new ConsultationService(consultationDao);
+        this.factureService = new FactureService(factureDao);
         profileContent();
     }
 
@@ -238,35 +244,62 @@ public class ContentPanel extends JPanel {
         removeAll();
         setLayout(new BorderLayout());
 
-        ArrayList<Patient> patients = patientService.getAllPatients();
-        String[] columnNames = {"ID facture", "Date", "Patient", "Montant"};
-        Object[][] data = new Object[patients.size()][columnNames.length];
+        ArrayList<Facture> factures = factureService.getAllFactures();
+        String[] columnNames = {"ID facture", "Date", "Type de paiement", "Montant"};
+        Object[][] data = new Object[factures.size()][columnNames.length];
 
-        for (int i = 0; i < patients.size(); i++) {
-            Patient patient = patients.get(i);
-            data[i][0] = patient.getId();
-            data[i][1] = patient.getNom() + " " + patient.getPrenom();
-            data[i][2] = patient.getTelephone();
-            data[i][3] = patient.getAdresse();
+        for (int i = 0; i < factures.size(); i++) {
+            Facture facture = factures.get(i);
+            data[i][0] = facture.getIdFacture();
+            data[i][1] = facture.getDateFactureation();
+            data[i][2] = facture.getTypePaiement();
+            data[i][3] = facture.getMontantTotal();
         }
 
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
-        JTable patientTable = new JTable(tableModel);
-        patientTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
-        JTableHeader header = patientTable.getTableHeader();
+        JTable factureTable = new JTable(tableModel);
+        factureTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
+        JTableHeader header = factureTable.getTableHeader();
         header.setBackground(Themes.BUTTONCOLOR);
         header.setForeground(Color.WHITE);
 
-        JScrollPane tableScrollPane = new JScrollPane(patientTable);
+        JScrollPane tableScrollPane = new JScrollPane(factureTable);
         add(tableScrollPane, BorderLayout.CENTER);
 
-        ListSelectionModel selectionModel = patientTable.getSelectionModel();
+        ListSelectionModel selectionModel = factureTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // Calculate recettes
+        Double recetteDeJour = 0.0;
+        Double recetteDeMois = 0.0;
+        Double recetteDeAnnee = 0.0;
+        LocalDate currentDate = LocalDate.now();
+
+        for (Facture facture : factures) {
+            if (facture.getDateFactureation().equals(currentDate)) recetteDeJour += facture.getMontantPaye();
+            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear())
+                recetteDeMois += facture.getMontantPaye();
+            if (facture.getDateFactureation().getYear() == currentDate.getYear()) recetteDeAnnee += facture.getMontantPaye();
+        }
+
+        // Create labels or a panel to display recette information
+        JLabel recetteJourLabel = new JLabel("Recette de jour : " + recetteDeJour + "                ");
+        JLabel recetteMoisLabel = new JLabel("Recette de mois : " + recetteDeMois + "                ");
+        JLabel recetteAnneeLabel = new JLabel("Recette d'année : " + recetteDeAnnee);
+
+        JPanel recettePanel = new JPanel();
+        recettePanel.setLayout(new FlowLayout());
+        recettePanel.add(recetteJourLabel);
+        recettePanel.add(recetteMoisLabel);
+        recettePanel.add(recetteAnneeLabel);
+
+        add(recettePanel, BorderLayout.SOUTH);
 
         revalidate();
         repaint();
     }
+
 
 
     public void displayPatients(DossierMedical dossierMedical) {
@@ -530,6 +563,8 @@ public class ContentPanel extends JPanel {
                         d.setSituationFinanciere(situationFinanciere);
                         facture.setSituationFinanciere(situationFinanciere);
                         //save facture to file
+                        factureService.addFacture(facture);
+                        System.out.println(factureService.getAllFactures());
                         dossierMedicalService.updateDossier(d);
                         //save situation financiere to file
 

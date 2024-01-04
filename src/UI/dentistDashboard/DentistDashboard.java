@@ -27,7 +27,7 @@ public class DentistDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1100, 700);
 
-        ContentPanel contentPanel = new ContentPanel(patientDao, dossierDao, consultationDao);
+        ContentPanel contentPanel = new ContentPanel(patientDao, dossierDao, consultationDao, factureDao);
         NavbarPanel navbarPanel = new NavbarPanel(contentPanel);
 
         JPanel topPanel = new JPanel(new BorderLayout());
