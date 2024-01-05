@@ -2,7 +2,6 @@ package services;
 
 import Database.dao.DossierDao;
 import models.antecedantClasses.DossierMedical;
-import models.finance.SituationFinanciere;
 
 import java.util.ArrayList;
 
@@ -26,8 +25,4 @@ public class DossierMedicalService {
     }
 
     public void updateDossier(DossierMedical updatedDossier) {fileDatabase.update(updatedDossier);}
-
-    public void updateDossierWithSituation(DossierMedical dossierMedical, SituationFinanciere situationFinanciere){
-        fileDatabase.update(dossierMedical, situationFinanciere);
-    }
 }

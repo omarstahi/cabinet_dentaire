@@ -1,11 +1,7 @@
 package models.antecedantClasses;
 
-import models.Dentiste;
 import models.Patient;
 import models.consultation.Consultation;
-import models.finance.SituationFinanciere;
-import models.finance.Facture;
-import services.ConsultationService;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -18,18 +14,16 @@ public class DossierMedical implements Serializable {
     private ArrayList <Consultation> Consultations = new ArrayList<>();
     private LocalDate dateCreation ;
     private Patient patient;
-    private SituationFinanciere situationFinanciere;
     private String numeroDossier;
 
     public DossierMedical() {
     }
 
-    public DossierMedical(ArrayList<Consultation> consultations, LocalDate dateCreation, Patient patient, SituationFinanciere situationFinanciere) {
+    public DossierMedical(ArrayList<Consultation> consultations, LocalDate dateCreation, Patient patient) {
         setNumeroDossier();
         Consultations = consultations;
         this.dateCreation = dateCreation;
         this.patient = patient;
-        this.situationFinanciere = situationFinanciere;
         this.numeroDossier = numeroDossier;
     }
 
@@ -55,14 +49,6 @@ public class DossierMedical implements Serializable {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
-    }
-
-    public SituationFinanciere getSituationFinanciere() {
-        return situationFinanciere;
-    }
-
-    public void setSituationFinanciere(SituationFinanciere situationFinanciere) {
-        this.situationFinanciere = situationFinanciere;
     }
 
     public String getNumeroDossier() {
@@ -91,11 +77,11 @@ public class DossierMedical implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DossierMedical that = (DossierMedical) o;
-        return Objects.equals(Consultations, that.Consultations) && Objects.equals(dateCreation, that.dateCreation) && Objects.equals(patient, that.patient) && Objects.equals(situationFinanciere, that.situationFinanciere) && Objects.equals(numeroDossier, that.numeroDossier);
+        return Objects.equals(Consultations, that.Consultations) && Objects.equals(dateCreation, that.dateCreation) && Objects.equals(patient, that.patient) && Objects.equals(numeroDossier, that.numeroDossier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Consultations, dateCreation, patient, situationFinanciere, numeroDossier);
+        return Objects.hash(Consultations, dateCreation, patient, numeroDossier);
     }
 }

@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public class Facture implements Serializable {
     private Double montantRestant;
-    private SituationFinanciere situationFinanciere;
     private Double montantPaye;
     private String idFacture;
     private StatutPaiement statutPaiement;
@@ -21,9 +20,8 @@ public class Facture implements Serializable {
     public Facture() {
     }
 
-    public Facture(StatutPaiement statutPaiement, Double montantRestant, SituationFinanciere situationFinanciere, Double montantPaye, LocalDate dateFactureation, Double montantTotal, Consultation consultation, TypePaiement typePaiement) {
+    public Facture(StatutPaiement statutPaiement, Double montantRestant, Double montantPaye, LocalDate dateFactureation, Double montantTotal, Consultation consultation, TypePaiement typePaiement) {
         this.montantRestant = montantRestant;
-        this.situationFinanciere = situationFinanciere;
         this.montantPaye = montantPaye;
         this.idFacture = UUID.randomUUID().toString();
         this.dateFactureation = dateFactureation;
@@ -39,14 +37,6 @@ public class Facture implements Serializable {
 
     public void setMontantRestant(Double montantRestant) {
         this.montantRestant = montantRestant;
-    }
-
-    public SituationFinanciere getSituationFinanciere() {
-        return situationFinanciere;
-    }
-
-    public void setSituationFinanciere(SituationFinanciere situationFinanciere) {
-        this.situationFinanciere = situationFinanciere;
     }
 
     public Double getMontantPaye() {
@@ -120,11 +110,11 @@ public class Facture implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Facture facture = (Facture) o;
-        return Objects.equals(montantRestant, facture.montantRestant) && Objects.equals(situationFinanciere, facture.situationFinanciere) && Objects.equals(montantPaye, facture.montantPaye) && Objects.equals(idFacture, facture.idFacture) && Objects.equals(dateFactureation, facture.dateFactureation) && Objects.equals(MontantTotal, facture.MontantTotal) && Objects.equals(consultation, facture.consultation) && typePaiement == facture.typePaiement;
+        return Objects.equals(montantRestant, facture.montantRestant) && Objects.equals(montantPaye, facture.montantPaye) && Objects.equals(idFacture, facture.idFacture) && Objects.equals(dateFactureation, facture.dateFactureation) && Objects.equals(MontantTotal, facture.MontantTotal) && Objects.equals(consultation, facture.consultation) && typePaiement == facture.typePaiement;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(montantRestant, situationFinanciere, montantPaye, idFacture, dateFactureation, MontantTotal, consultation, typePaiement);
+        return Objects.hash(montantRestant, montantPaye, idFacture, dateFactureation, MontantTotal, consultation, typePaiement);
     }
 }

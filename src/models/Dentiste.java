@@ -1,6 +1,5 @@
 package models;
 
-import models.finance.SituationFinanciere;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

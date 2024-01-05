@@ -13,7 +13,6 @@ import models.antecedantClasses.DossierMedical;
 import models.antecedantClasses.Risque;
 import models.finance.Facture;
 import models.finance.StatutPaiement;
-import models.finance.SituationFinanciere;
 import services.DossierMedicalService;
 import services.FactureService;
 import services.PatientService;
@@ -148,6 +147,9 @@ public class ContentPanelS extends JPanel {
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
 
+        JLabel hint = new JLabel("click on a row");
+        hint.setIcon(resizeIcon(new ImageIcon("src/Static/icons/hint.png"), 40, 40));
+
         formPanel.add(firstNameLabel);
         formPanel.add(firstNameField);
         formPanel.add(lastNameLabel);
@@ -168,61 +170,48 @@ public class ContentPanelS extends JPanel {
         formPanel.add(antecedantField);
         formPanel.add(risqueLabel);
         formPanel.add(risqueField);
-        formPanel.add(new JLabel()); // Empty label for spacing
+        formPanel.add(new JLabel());
         formPanel.add(submitButton);
+        formPanel.add(hint);
 
         patientPanel.add(formPanel);
 
         add(patientPanel, BorderLayout.CENTER);
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Get the entered information
-                String fname = firstNameField.getText();
-                String lname = lastNameField.getText();
-                String birth = birthField.getText();
-                String address = addressField.getText();
-                String phone = phoneField.getText();
-                String email = emailField.getText();
-                String cin = cinField.getText();
-                Mutuelle selectedMutuelle = (Mutuelle) mutuelleField.getSelectedItem();
-                CategorieAntecedentMedicaux selectedAntecedant = (CategorieAntecedentMedicaux) antecedantField.getSelectedItem();
-                Risque selectedRisque = (Risque) risqueField.getSelectedItem();
-                //System.out.println("name : " + name);
-                // formPanel.add(mutuelleField);
+        submitButton.addActionListener(e -> {
+            String fname = firstNameField.getText();
+            String lname = lastNameField.getText();
+            String birth = birthField.getText();
+            String address = addressField.getText();
+            String phone = phoneField.getText();
+            String email = emailField.getText();
+            String cin = cinField.getText();
+            Mutuelle selectedMutuelle = (Mutuelle) mutuelleField.getSelectedItem();
+            CategorieAntecedentMedicaux selectedAntecedant = (CategorieAntecedentMedicaux) antecedantField.getSelectedItem();
+            Risque selectedRisque = (Risque) risqueField.getSelectedItem();
 
+            dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient());
 
-
-                // Create a Patient object
-                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere());
-
-                AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
-                selectedAntecedant.setRisqueAssocie(selectedRisque);
-                try {
-                    newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
-                    if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
-                            phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
-                        return;  // Exit the method if any field is empty
-                    }
-                    if (patientService != null) {
-                        dossierMedical.setPatient(newPatient);
-                        //newPatient.setDossierMedical(dossierMedical);
-                        patientService.addPatient(newPatient);
-                        dossierMedicalService.addDossier(dossierMedical);
-                        System.out.println(dossierMedicalService.getAllDossiers());
-
-//                        System.out.println(patientService.getAllPatients());
-                        System.out.println("Patient added: " + newPatient);
-                        refreshContent();
-
-                    } else {
-                        System.out.println("PatientService not initialized.");
-                    }
-                } catch (DateTimeParseException exp){
-                    System.out.println("ghjkl");
-                    JOptionPane.showMessageDialog(null, "Please fill the date of birth field with the correct format", "Error", JOptionPane.ERROR_MESSAGE);
+            AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
+            selectedAntecedant.setRisqueAssocie(selectedRisque);
+            try {
+                newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
+                if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
+                        phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
+                if (patientService != null) {
+                    dossierMedical.setPatient(newPatient);
+                    patientService.addPatient(newPatient);
+                    dossierMedicalService.addDossier(dossierMedical);
+                    System.out.println("Patient added: " + newPatient);
+                    refreshContent();
+                } else {
+                    System.out.println("PatientService not initialized.");
+                }
+            } catch (DateTimeParseException exp){
+                System.out.println("ghjkl");
+                JOptionPane.showMessageDialog(null, "Please fill the date of birth field with the correct format", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         displayPatients();
@@ -355,7 +344,6 @@ public class ContentPanelS extends JPanel {
     private void updatePatientContent(Patient patient) {
             removeAll();
             setLayout(new GridLayout(1, 1));
-
             JPanel updatePanel = new JPanel(new GridLayout(1, 1));
 
             // Form
@@ -384,7 +372,6 @@ public class ContentPanelS extends JPanel {
             JLabel cinLabel = new JLabel("CIN:");
             cinLabel.setFont(Themes.DEFAULTFONT);
             JTextField cinField = new JTextField();
-
 
             firstNameField.setText(patient.getNom());
             lastNameField.setText(patient.getPrenom());
@@ -464,7 +451,7 @@ public class ContentPanelS extends JPanel {
 
         JLabel totalLabel = new JLabel("Total:");
         totalLabel.setFont(Themes.DEFAULTFONT);
-        JTextField totalField = new JTextField();
+        JLabel totalField = new JLabel();  // Use JLabel instead of JTextField
 
         JLabel statutLabel = new JLabel("Statut paiement:");
         statutLabel.setFont(Themes.DEFAULTFONT);
@@ -515,9 +502,6 @@ public class ContentPanelS extends JPanel {
         revalidate();
         repaint();
     }
-
-
-
 
     private Icon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();

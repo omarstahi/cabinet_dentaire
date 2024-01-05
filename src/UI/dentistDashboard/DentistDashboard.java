@@ -1,9 +1,6 @@
 package UI.dentistDashboard;
 
-import Database.dao.ConsultationDao;
-import Database.dao.DossierDao;
-import Database.dao.FactureDao;
-import Database.dao.PatientDao;
+import Database.dao.*;
 import UI.dentistDashboard.panels.ContentPanel;
 import UI.dentistDashboard.panels.NavbarPanel;
 

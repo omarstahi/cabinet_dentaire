@@ -1,4 +1,8 @@
 package Database.dao;
 
-public class CaisseDao {
+import models.finance.Caisse;
+
+public abstract class CaisseDao implements IDao<Caisse>{
+
+
 }

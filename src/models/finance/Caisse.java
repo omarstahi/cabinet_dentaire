@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Caisse {
-
-    private List<SituationFinanciere> situationFinancieres = new ArrayList<SituationFinanciere>();
     private Double recetteDuJours;
     private Double RecetteDuMois;
     private Double RecetteDuLAnnee;
@@ -15,21 +13,14 @@ public class Caisse {
     public Caisse() {
     }
 
-    public Caisse(List<SituationFinanciere> situationFinancieres, Double recetteDuJours, Double recetteDuMois, Double recetteDuLAnnee, Long idCaisse) {
-        this.situationFinancieres = situationFinancieres;
+    public Caisse(Double recetteDuJours, Double recetteDuMois, Double recetteDuLAnnee, Long idCaisse) {
         this.recetteDuJours = recetteDuJours;
         RecetteDuMois = recetteDuMois;
         RecetteDuLAnnee = recetteDuLAnnee;
         this.idCaisse = idCaisse;
     }
 
-    public List<SituationFinanciere> getSituationFinancieres() {
-        return situationFinancieres;
-    }
 
-    public void setSituationFinancieres(List<SituationFinanciere> situationFinancieres) {
-        this.situationFinancieres = situationFinancieres;
-    }
 
     public Double getRecetteDuJours() {
         return recetteDuJours;
@@ -66,7 +57,6 @@ public class Caisse {
     @Override
     public String toString() {
         return "Caisse{" +
-                "situationFinancieres=" + situationFinancieres +
                 ", recetteDuJours=" + recetteDuJours +
                 ", RecetteDuMois=" + RecetteDuMois +
                 ", RecetteDuLAnnee=" + RecetteDuLAnnee +
@@ -79,11 +69,11 @@ public class Caisse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Caisse caisse = (Caisse) o;
-        return Objects.equals(situationFinancieres, caisse.situationFinancieres) && Objects.equals(recetteDuJours, caisse.recetteDuJours) && Objects.equals(RecetteDuMois, caisse.RecetteDuMois) && Objects.equals(RecetteDuLAnnee, caisse.RecetteDuLAnnee) && Objects.equals(idCaisse, caisse.idCaisse);
+        return Objects.equals(recetteDuJours, caisse.recetteDuJours) && Objects.equals(RecetteDuMois, caisse.RecetteDuMois) && Objects.equals(RecetteDuLAnnee, caisse.RecetteDuLAnnee) && Objects.equals(idCaisse, caisse.idCaisse);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(situationFinancieres, recetteDuJours, RecetteDuMois, RecetteDuLAnnee, idCaisse);
+        return Objects.hash(recetteDuJours, RecetteDuMois, RecetteDuLAnnee, idCaisse);
     }
 }

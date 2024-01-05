@@ -1,9 +1,6 @@
 package UI.dentistDashboard.panels;
 
-import Database.dao.ConsultationDao;
-import Database.dao.DossierDao;
-import Database.dao.FactureDao;
-import Database.dao.PatientDao;
+import Database.dao.*;
 import Static.Themes;
 import UI.AlternatingRowColorRenderer;
 import models.InterventionMedecin;
@@ -18,13 +15,9 @@ import models.antecedantClasses.Risque;
 import models.consultation.Consultation;
 import models.consultation.TypeConsultation;
 import models.finance.Facture;
-import models.finance.SituationFinanciere;
 import models.finance.StatutPaiement;
 import models.finance.TypePaiement;
-import services.ConsultationService;
-import services.DossierMedicalService;
-import services.FactureService;
-import services.PatientService;
+import services.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -203,7 +196,7 @@ public class ContentPanel extends JPanel {
             AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
             selectedAntecedant.setRisqueAssocie(selectedRisque);
             try {
-                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere());
+                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient());
                 newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
                 if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
                         phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
@@ -230,7 +223,7 @@ public class ContentPanel extends JPanel {
 
             }
         });
-        displayPatients(dossierMedical);
+        displayPatients();
         revalidate();
         repaint();
     }
@@ -295,7 +288,7 @@ public class ContentPanel extends JPanel {
         repaint();
     }
 
-    public void displayPatients(DossierMedical dossierMedical) {
+    public void displayPatients() {
 
         ArrayList<Patient> patients = patientService.getAllPatients();
 
@@ -446,13 +439,14 @@ public class ContentPanel extends JPanel {
                 patientService.updatePatient(p);
                 dossierMedicalService.updateDossier(dossier);
                 consultationService.addConsultation(consultation);
-
             } catch (NumberFormatException exp){
                 JOptionPane.showMessageDialog(null, "Please fill the fields with valid numbers", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         factureButton.addActionListener(e -> {
+            //Double prixPatient = Double.parseDouble(prixPatientField.getText());
+            //System.out.println(prixPatient);
             String consultationId = consultation.getIdConsultation();
             factureContent(patientId, consultationId);
         });
@@ -490,7 +484,6 @@ public class ContentPanel extends JPanel {
         TypePaiement[] typePayementItems = {TypePaiement.CARTE_CREDIT, TypePaiement.CHEQUE, TypePaiement.ESPECE, TypePaiement.VIREMENT, TypePaiement.AUTRE};
         JComboBox typePayementField = new JComboBox(typePayementItems);
 
-
         JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>", resizeIcon(new ImageIcon("src/Static/icons/submit.png"), 30, 30));
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
@@ -524,36 +517,17 @@ public class ContentPanel extends JPanel {
                 }
                 else{
                     Consultation consultation1 = consultationService.getConsultationById(consultationId);
-                    Facture facture = new Facture(selectedStatut, resteAPaye, new SituationFinanciere(), montantPaye, LocalDate.now(), total, new Consultation(), selectedType);
+                    Facture facture = new Facture(selectedStatut, resteAPaye, montantPaye, LocalDate.now(), total, new Consultation(), selectedType);
                     consultation1.addFacture(facture);
                     facture.setConsultation(consultation1);
                     consultationService.updateConsultation(consultation1);
                     Patient patient = patientService.getPatientById(patientId);
                     DossierMedical dossier = patient.getDossierMedical();
-                    DossierMedical d = dossierMedicalService.getDossierByNum(dossier.getNumeroDossier());
-                    //Situation financiere
-                    SituationFinanciere situationFinanciere = d.getSituationFinanciere();
-                    Double montantGlobalPaye = situationFinanciere.getMontantGolbalePaye();
-                    Double montantGlobalRestant = situationFinanciere.getMontantGlobalRestant();
-                    situationFinanciere.setDossierMedical(d);
-                    situationFinanciere.setMontantGolbalePaye(montantGlobalPaye + montantPaye);
-                    situationFinanciere.setMontantGlobalRestant(montantGlobalRestant + resteAPaye);
-                    situationFinanciere.setDateCreation(LocalDate.now());
-                    situationFinanciere.addFacture(facture);
-                    d.setSituationFinanciere(situationFinanciere);
-                    facture.setSituationFinanciere(situationFinanciere);
                     //save facture to file
                     factureService.addFacture(facture);
-                    System.out.println(factureService.getAllFactures());
-                    dossierMedicalService.updateDossier(d);
-                    //save situation financiere to file
-
-
-
-
+                    dossierMedicalService.updateDossier(dossier);
             }
             } catch (StackOverflowError ignored){
-
             }
         });
         ArrayList<Facture> factures = factureService.getAllFactures();

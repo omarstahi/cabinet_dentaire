@@ -37,7 +37,7 @@ public class PatientDao implements IDao<Patient>{
                         patients.add((Patient) obj);
                     }
                 } catch (EOFException e) {
-                    break; // Fin du fichier
+                    break;
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
