@@ -159,7 +159,7 @@ public class ContentPanel extends JPanel {
 
         JLabel hint = new JLabel("click on a row");
         hint.setIcon(resizeIcon(new ImageIcon("src/Static/icons/hint.png"), 40, 40));
-        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
+        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>", resizeIcon(new ImageIcon("src/Static/icons/submit.png"), 30, 30));
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
 
@@ -278,10 +278,12 @@ public class ContentPanel extends JPanel {
         LocalDate currentDate = LocalDate.now();
 
         for (Facture facture : factures) {
-            if (facture.getDateFactureation().equals(currentDate)) recetteDeJour += facture.getMontantPaye();
-            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear())
+            if (facture.getDateFactureation().equals(currentDate) && facture.getStatutPaiement() == StatutPaiement.PAYE)
+                recetteDeJour += facture.getMontantPaye();
+            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAYE)
                 recetteDeMois += facture.getMontantPaye();
-            if (facture.getDateFactureation().getYear() == currentDate.getYear()) recetteDeAnnee += facture.getMontantPaye();
+            if (facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAYE)
+                recetteDeAnnee += facture.getMontantPaye();
         }
 
         JLabel recetteJourLabel = new JLabel("Recette de jour : " + recetteDeJour + "                ");
@@ -402,10 +404,10 @@ public class ContentPanel extends JPanel {
         JComboBox typeConsultationField = new JComboBox(typeConsultationItems);
 
 
-        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
+        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>", resizeIcon(new ImageIcon("src/Static/icons/submit.png"), 30, 30));
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
-        JButton factureButton = new JButton("<html><font color='white'>Facture</font></html>");
+        JButton factureButton = new JButton("<html><font color='white'>Facture</font></html>", resizeIcon(new ImageIcon("src/Static/icons/facture.png"), 30, 30));
         factureButton.setFont(Themes.DEFAULTFONT);
         factureButton.setBackground(Themes.BUTTONCOLOR);
         JLabel warning = new JLabel("submit consultation then");
@@ -487,7 +489,7 @@ public class ContentPanel extends JPanel {
         JPanel facturePanel = new JPanel(new GridLayout(1, 1));
 
         // Form
-        JPanel formPanel = new JPanel(new GridLayout(0, 4, 15, 70));
+        JPanel formPanel = new JPanel(new GridLayout(0, 4, 15, 90));
         JLabel montantPayeLabel = new JLabel("Montant paye:");
         montantPayeLabel.setFont(Themes.DEFAULTFONT);
         JTextField montantPayeField = new JTextField();
@@ -513,7 +515,7 @@ public class ContentPanel extends JPanel {
         JComboBox typePayementField = new JComboBox(typePayementItems);
 
 
-        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
+        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>", resizeIcon(new ImageIcon("src/Static/icons/submit.png"), 30, 30));
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
 
@@ -574,7 +576,6 @@ public class ContentPanel extends JPanel {
                         //save situation financiere to file
 
 
-                        System.out.println(dossierMedicalService.getDossierByNum(d.getNumeroDossier()).getSituationFinanciere().getMontantGolbalePaye());
                         //refreshContent();
 
 
@@ -584,15 +585,35 @@ public class ContentPanel extends JPanel {
                 }
             }
         });
-        displayPatients(dossierMedical);
+        ArrayList<Facture> factures = factureService.getAllFactures();
+        String[] columnNames = {"ID facture", "Date", "Type de paiement","Statut de paiment", "Montant"};
+        Object[][] data = new Object[factures.size()][columnNames.length];
 
+        for (int i = 0; i < factures.size(); i++) {
+            Facture facture = factures.get(i);
+            data[i][0] = facture.getIdFacture();
+            data[i][1] = facture.getDateFactureation();
+            data[i][2] = facture.getTypePaiement();
+            data[i][3] = facture.getStatutPaiement();
+            data[i][4] = facture.getMontantTotal();
+        }
+
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
+
+        JTable factureTable = new JTable(tableModel);
+        factureTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
+        JTableHeader header = factureTable.getTableHeader();
+        header.setBackground(Themes.BUTTONCOLOR);
+        header.setForeground(Color.WHITE);
+
+        JScrollPane tableScrollPane = new JScrollPane(factureTable);
+        add(tableScrollPane, BorderLayout.CENTER);
+
+        ListSelectionModel selectionModel = factureTable.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         revalidate();
         repaint();
     }
-
-
-
-
 
     public void refreshContent() {
         removeAll();
@@ -600,9 +621,6 @@ public class ContentPanel extends JPanel {
         revalidate();
         repaint();
     }
-
-
-
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();

@@ -20,45 +20,40 @@ public class NavbarPanel extends JPanel {
         // Increase vertical spacing
         add(Box.createVerticalStrut(20));
 
-        JButton profileButton = new JButton("<html><font color='white'>Profile</font></html>", resizeIcon(new ImageIcon("src/Static/icons/profile.png"), 40, 40));
-        profileButton.setPreferredSize(new Dimension(150, 40)); // Adjust the size as needed
+        JButton profileButton = new JButton("<html><font color='white'>Profile</font></html>", resizeIcon(new ImageIcon("src/Static/icons/secretary.png"), 40, 40));
+        profileButton.setPreferredSize(new Dimension(150, 40));
         profileButton.setFont(Themes.DEFAULTFONT);
         JButton patientButton = new JButton("<html><font color='white'>Patients</font></html>", new ImageIcon("src/Static/icons/patient.png"));
-        patientButton.setPreferredSize(new Dimension(150, 40)); // Adjust the size as needed
+        patientButton.setPreferredSize(new Dimension(150, 40));
         patientButton.setFont(Themes.DEFAULTFONT);
         JButton caisseButton = new JButton("<html><font color='white'>Caisse</font></html>", resizeIcon(new ImageIcon("src/Static/icons/caisse.png"), 40, 40));
-        caisseButton.setPreferredSize(new Dimension(150, 40)); // Adjust the size as needed
+        caisseButton.setPreferredSize(new Dimension(150, 40));
         caisseButton.setFont(Themes.DEFAULTFONT);
+        JButton disconnectButton = new JButton("<html><font color='white'>Disconnect</font></html>", resizeIcon(new ImageIcon("src/Static/icons/disconnect.png"), 30, 30));
+        disconnectButton.setPreferredSize(new Dimension(150, 40));
+        disconnectButton.setFont(Themes.DEFAULTFONT);
         profileButton.setContentAreaFilled(false);
         patientButton.setContentAreaFilled(false);
         caisseButton.setContentAreaFilled(false);
-
+        disconnectButton.setContentAreaFilled(false);
         add(profileButton);
-        add(Box.createVerticalStrut(10)); // Add some vertical spacing
+        add(Box.createVerticalStrut(10));
         add(patientButton);
-        add(Box.createVerticalStrut(10)); // Add some vertical spacing
+        add(Box.createVerticalStrut(10));
         add(caisseButton);
+        add(Box.createVerticalStrut(getMaximumSize().height));
+        add(disconnectButton);
 
         // Set action listeners for navbar buttons
-        profileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                contentPanel.profileContent();
-            }
-        });
+        profileButton.addActionListener(e -> contentPanel.profileContent());
 
-        patientButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                contentPanel.patientContent();
-            }
-        });
+        patientButton.addActionListener(e -> contentPanel.patientContent());
 
-        caisseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                contentPanel.caisseContent();
-            }
+        caisseButton.addActionListener(e -> contentPanel.caisseContent());
+
+        disconnectButton.addActionListener(e -> {
+            // Exit the application
+            System.exit(0);
         });
     }
 

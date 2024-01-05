@@ -144,7 +144,7 @@ public class ContentPanelS extends JPanel {
 
 
 
-        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
+        JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>", resizeIcon(new ImageIcon("src/Static/icons/submit.png"), 30, 30));
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
 
@@ -226,11 +226,9 @@ public class ContentPanelS extends JPanel {
             }
         });
         displayPatients();
-
         revalidate();
         repaint();
     }
-
 
     public void caisseContent() {
         removeAll();
@@ -286,8 +284,13 @@ public class ContentPanelS extends JPanel {
         recettePanel.add(recetteJourLabel);
         recettePanel.add(recetteMoisLabel);
         recettePanel.add(recetteAnneeLabel);
+        JLabel hint = new JLabel("Hint : click on a row to update it");
+        hint.setIcon(resizeIcon(new ImageIcon("src/Static/icons/hint.png"), 40, 40));
+        JPanel hintPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        hintPanel.add(hint);
 
-        add(recettePanel, BorderLayout.SOUTH);
+        add(hintPanel, BorderLayout.NORTH);
+        add(recettePanel, BorderLayout.CENTER);
 
         selectionModel.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -306,11 +309,7 @@ public class ContentPanelS extends JPanel {
         repaint();
     }
 
-
     public void displayPatients() {
-        //removeAll();
-        //setLayout(new GridLayout(2,1));
-
         ArrayList<Patient> patients = patientService.getAllPatients();
 
         String[] columnNames = {"ID", "Full Name", "Phone", "Address", "Birth"};
@@ -346,10 +345,8 @@ public class ContentPanelS extends JPanel {
                     int selectedRow = patientTable.getSelectedRow();
 
                     if (selectedRow != -1) {
-                        // Retrieve the patient from the selected row
                         Patient selectedPatient = patients.get(selectedRow);
 
-                        // Call the update method with the selected patient
                         updatePatientContent(selectedPatient);
                     }
                 }
@@ -362,7 +359,6 @@ public class ContentPanelS extends JPanel {
             removeAll();
             setLayout(new GridLayout(1, 1));
 
-            // Create a panel to hold the components
             JPanel updatePanel = new JPanel(new GridLayout(1, 1));
 
             // Form
@@ -399,7 +395,7 @@ public class ContentPanelS extends JPanel {
             phoneField.setText(patient.getTelephone());
             emailField.setText(patient.getEmail());
             cinField.setText(patient.getCin());
-            JButton updateButton = new JButton("<html><font color='white'>Update</font></html>");
+            JButton updateButton = new JButton("<html><font color='white'>Update</font></html>", resizeIcon(new ImageIcon("src/Static/icons/update.png"), 30, 30));
             updateButton.setFont(Themes.DEFAULTFONT);
             updateButton.setBackground(Themes.BUTTONCOLOR);
             formPanel.add(firstNameLabel);
@@ -431,25 +427,22 @@ public class ContentPanelS extends JPanel {
 
             add(updatePanel, BorderLayout.CENTER);
 
-            updateButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // Get the updated information
-                    String updatedFirstName = firstNameField.getText();
-                    String updatedLastName = lastNameField.getText();
-                    String updatedAdresse = addressField.getText();
-                    String updatedPhone = phoneField.getText();
-                    String updatedEmail = emailField.getText();
-                    String updatedCIN = cinField.getText();
-                    patient.setNom(updatedFirstName);
-                    patient.setPrenom(updatedLastName);
-                    patient.setAdresse(updatedAdresse);
-                    patient.setTelephone(updatedPhone);
-                    patient.setEmail(updatedEmail);
-                    patient.setCin(updatedCIN);
-                    patientService.updatePatient(patient);
-                    refreshContent();
-                }
+            updateButton.addActionListener(e -> {
+                // Get the updated information
+                String updatedFirstName = firstNameField.getText();
+                String updatedLastName = lastNameField.getText();
+                String updatedAdresse = addressField.getText();
+                String updatedPhone = phoneField.getText();
+                String updatedEmail = emailField.getText();
+                String updatedCIN = cinField.getText();
+                patient.setNom(updatedFirstName);
+                patient.setPrenom(updatedLastName);
+                patient.setAdresse(updatedAdresse);
+                patient.setTelephone(updatedPhone);
+                patient.setEmail(updatedEmail);
+                patient.setCin(updatedCIN);
+                patientService.updatePatient(patient);
+                refreshContent();
             });
 
             revalidate();
@@ -485,8 +478,7 @@ public class ContentPanelS extends JPanel {
         totalField.setText(facture.getMontantTotal().toString());
 
         statutComboBox.setSelectedItem(facture.getStatutPaiement());
-
-        JButton updateButton = new JButton("<html><font color='white'>Update</font></html>");
+        JButton updateButton = new JButton("<html><font color='white'>Update</font></html>", resizeIcon(new ImageIcon("src/Static/icons/update.png"), 30, 30));
         updateButton.setFont(Themes.DEFAULTFONT);
         updateButton.setBackground(Themes.BUTTONCOLOR);
 

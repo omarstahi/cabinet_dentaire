@@ -15,8 +15,8 @@ public class Login extends JFrame{
         setLocationRelativeTo(null);
 
         // Create two panels
-        JPanel leftPanel = new ImagePanel();  // Custom panel for displaying an image
-        JPanel rightPanel = new LoginPanel(); // Custom panel for the login form
+        JPanel leftPanel = new ImagePanel();
+        JPanel rightPanel = new LoginPanel();
 
         // Set layout for the main frame
         setLayout(new GridLayout(1, 2));
