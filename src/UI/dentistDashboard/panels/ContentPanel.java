@@ -101,9 +101,7 @@ public class ContentPanel extends JPanel {
     public void patientContent() {
         removeAll();
         setLayout(new GridLayout(2,1));
-        // Create a panel to hold the components
         JPanel patientPanel = new JPanel(new GridLayout(1, 1));
-
 
         // Form
         JPanel formPanel = new JPanel(new GridLayout(6, 4, 5, 5));
@@ -190,54 +188,49 @@ public class ContentPanel extends JPanel {
         patientPanel.add(formPanel);
 
         add(patientPanel, BorderLayout.CENTER);
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Get the entered information
-                String fname = firstNameField.getText();
-                String lname = lastNameField.getText();
-                String birth = birthField.getText();
-                String address = addressField.getText();
-                String phone = phoneField.getText();
-                String email = emailField.getText();
-                String cin = cinField.getText();
-                Mutuelle selectedMutuelle = (Mutuelle) mutuelleField.getSelectedItem();
-                CategorieAntecedentMedicaux selectedAntecedant = (CategorieAntecedentMedicaux) antecedantField.getSelectedItem();
-                Risque selectedRisque = (Risque) risqueField.getSelectedItem();
+        submitButton.addActionListener(e -> {
+            String fname = firstNameField.getText();
+            String lname = lastNameField.getText();
+            String birth = birthField.getText();
+            String address = addressField.getText();
+            String phone = phoneField.getText();
+            String email = emailField.getText();
+            String cin = cinField.getText();
+            Mutuelle selectedMutuelle = (Mutuelle) mutuelleField.getSelectedItem();
+            CategorieAntecedentMedicaux selectedAntecedant = (CategorieAntecedentMedicaux) antecedantField.getSelectedItem();
+            Risque selectedRisque = (Risque) risqueField.getSelectedItem();
 
-                AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
-                selectedAntecedant.setRisqueAssocie(selectedRisque);
-                try {
-                    dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere());
-                    newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
-                    if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
-                            phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
-                        return;  // Exit the method if any field is empty
-                    }
-                    if (patientService != null) {
-                        dossierMedical.setPatient(newPatient);
-                        newPatient.setDossierMedical(dossierMedical);
-                        patientService.addPatient(newPatient);
-                        dossierMedicalService.addDossier(dossierMedical);
-                        System.out.println(dossierMedicalService.getAllDossiers());
+            AntecedantMedical antecedant = new AntecedantMedical(selectedAntecedant);
+            selectedAntecedant.setRisqueAssocie(selectedRisque);
+            try {
+                dossierMedical = new DossierMedical(new ArrayList<>(), LocalDate.now(), new Patient(), new SituationFinanciere());
+                newPatient = new Patient(fname, lname, address, phone, email, cin, LocalDate.parse(birth), selectedMutuelle, antecedant, dossierMedical);
+                if (fname.isEmpty() || lname.isEmpty() || birth.isEmpty() || address.isEmpty() ||
+                        phone.isEmpty() || email.isEmpty() || cin.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (patientService != null) {
+                    dossierMedical.setPatient(newPatient);
+                    newPatient.setDossierMedical(dossierMedical);
+                    patientService.addPatient(newPatient);
+                    dossierMedicalService.addDossier(dossierMedical);
+                    System.out.println(dossierMedicalService.getAllDossiers());
 
-                        System.out.println("Patient added: " + newPatient);
-                        refreshContent();
-
-                    } else {
-                        System.out.println("PatientService not initialized.");
-                    }
-                } catch (DateTimeParseException exp){
-                    JOptionPane.showMessageDialog(null, "Please fill the date of birth field with the correct format", "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (StackOverflowError ignored){
+                    System.out.println("Patient added: " + newPatient);
                     refreshContent();
 
+                } else {
+                    System.out.println("PatientService not initialized.");
                 }
+            } catch (DateTimeParseException exp){
+                JOptionPane.showMessageDialog(null, "Please fill the date of birth field with the correct format", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (StackOverflowError ignored){
+                refreshContent();
+
             }
         });
         displayPatients(dossierMedical);
-
         revalidate();
         repaint();
     }
@@ -302,11 +295,7 @@ public class ContentPanel extends JPanel {
         repaint();
     }
 
-
-
     public void displayPatients(DossierMedical dossierMedical) {
-        //removeAll();
-        //setLayout(new GridLayout(2,1));
 
         ArrayList<Patient> patients = patientService.getAllPatients();
 
@@ -336,17 +325,13 @@ public class ContentPanel extends JPanel {
         ListSelectionModel selectionModel = patientTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    int selectedRow = patientTable.getSelectedRow();
+        selectionModel.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = patientTable.getSelectedRow();
 
-                    if (selectedRow != -1) {
-                        // Retrieve the patient ID from the selected row
-                        Object patientId = patientTable.getValueAt(selectedRow, 0);
-                        dossierMedicalContent((String)patientId);
-                    }
+                if (selectedRow != -1) {
+                    Object patientId = patientTable.getValueAt(selectedRow, 0);
+                    dossierMedicalContent((String)patientId);
                 }
             }
         });
@@ -437,46 +422,39 @@ public class ContentPanel extends JPanel {
 
         add(topPanel, BorderLayout.NORTH);
         add(bottomPanel, BorderLayout.SOUTH);
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    CategorieActe categorieActe = (CategorieActe) acteField.getSelectedItem();
-                    Long dent = Long.parseLong(dentField.getText());
-                    Double prixBase = Double.parseDouble(prixBaseField.getText());
-                    Double prixPatient = Double.parseDouble(prixPatientField.getText());
-                    TypeConsultation typeConsultation = (TypeConsultation) typeConsultationField.getSelectedItem();
-                    String note = noteField.getText();
+        submitButton.addActionListener(e -> {
+            try {
+                CategorieActe categorieActe = (CategorieActe) acteField.getSelectedItem();
+                Long dent = Long.parseLong(dentField.getText());
+                Double prixBase = Double.parseDouble(prixBaseField.getText());
+                Double prixPatient = Double.parseDouble(prixPatientField.getText());
+                TypeConsultation typeConsultation = (TypeConsultation) typeConsultationField.getSelectedItem();
+                String note = noteField.getText();
 
-                    //update dossier medical de patient
-                    Patient p = patientService.getPatientById(patientId);
-                    DossierMedical dossier = p.getDossierMedical();
+                //update dossier medical de patient
+                Patient p = patientService.getPatientById(patientId);
+                DossierMedical dossier = p.getDossierMedical();
 
-                    Acte acte = new Acte(new ArrayList<>(), prixBase, categorieActe);
-                    InterventionMedecin inter = new InterventionMedecin(note, prixPatient, dent, acte, new Consultation());
-                    acte.addIntervention(inter);
-                    consultation = new Consultation(new ArrayList<>(), dossier, LocalDate.now(), typeConsultation, new ArrayList<>());
-                    inter.setConsultation(consultation);
-                    consultation.addIntervention(inter);
-                    dossier.addConsultation(consultation);
-                    p.setDossierMedical(dossier);
-                    patientService.updatePatient(p);
-                    dossierMedicalService.updateDossier(dossier);
-                    consultationService.addConsultation(consultation);
+                Acte acte = new Acte(new ArrayList<>(), prixBase, categorieActe);
+                InterventionMedecin inter = new InterventionMedecin(note, prixPatient, dent, acte, new Consultation());
+                acte.addIntervention(inter);
+                consultation = new Consultation(new ArrayList<>(), dossier, LocalDate.now(), typeConsultation, new ArrayList<>());
+                inter.setConsultation(consultation);
+                consultation.addIntervention(inter);
+                dossier.addConsultation(consultation);
+                p.setDossierMedical(dossier);
+                patientService.updatePatient(p);
+                dossierMedicalService.updateDossier(dossier);
+                consultationService.addConsultation(consultation);
 
-                } catch (NumberFormatException exp){
-                    JOptionPane.showMessageDialog(null, "Please fill the fields with valid numbers", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            } catch (NumberFormatException exp){
+                JOptionPane.showMessageDialog(null, "Please fill the fields with valid numbers", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        factureButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String consultationId = consultation.getIdConsultation();
-                factureContent(patientId, consultationId);
-            }
+        factureButton.addActionListener(e -> {
+            String consultationId = consultation.getIdConsultation();
+            factureContent(patientId, consultationId);
         });
         revalidate();
         repaint();
@@ -485,10 +463,8 @@ public class ContentPanel extends JPanel {
     public void factureContent(String patientId, String consultationId){
         removeAll();
         setLayout(new GridLayout(2,1));
-        // Create a panel to hold the components
         JPanel facturePanel = new JPanel(new GridLayout(1, 1));
 
-        // Form
         JPanel formPanel = new JPanel(new GridLayout(0, 4, 15, 90));
         JLabel montantPayeLabel = new JLabel("Montant paye:");
         montantPayeLabel.setFont(Themes.DEFAULTFONT);
@@ -535,54 +511,49 @@ public class ContentPanel extends JPanel {
         facturePanel.add(formPanel);
 
         add(facturePanel, BorderLayout.CENTER);
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Get the entered information
-                StatutPaiement selectedStatut = (StatutPaiement) statutField.getSelectedItem();
-                TypePaiement selectedType = (TypePaiement) typePayementField.getSelectedItem();
-                Double montantPaye = Double.parseDouble(montantPayeField.getText());
-                Double resteAPaye = Double.parseDouble(resteAPayeField.getText());
-                Double total = Double.parseDouble(totalField.getText());
+        submitButton.addActionListener(e -> {
+            StatutPaiement selectedStatut = (StatutPaiement) statutField.getSelectedItem();
+            TypePaiement selectedType = (TypePaiement) typePayementField.getSelectedItem();
+            Double montantPaye = Double.parseDouble(montantPayeField.getText());
+            Double resteAPaye = Double.parseDouble(resteAPayeField.getText());
+            Double total = Double.parseDouble(totalField.getText());
 
-                try {
-                    if (montantPaye.isNaN() || resteAPaye.isNaN() || total.isNaN()) {
-                        JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
-                    }
-                    else{
-                        Consultation consultation1 = consultationService.getConsultationById(consultationId);
-                        Facture facture = new Facture(selectedStatut, resteAPaye, new SituationFinanciere(), montantPaye, LocalDate.now(), total, new Consultation(), selectedType);
-                        consultation1.addFacture(facture);
-                        facture.setConsultation(consultation1);
-                        consultationService.updateConsultation(consultation1);
-                        Patient patient = patientService.getPatientById(patientId);
-                        DossierMedical dossier = patient.getDossierMedical();
-                        DossierMedical d = dossierMedicalService.getDossierByNum(dossier.getNumeroDossier());
-                        //Situation financiere
-                        SituationFinanciere situationFinanciere = d.getSituationFinanciere();
-                        Double montantGlobalPaye = situationFinanciere.getMontantGolbalePaye();
-                        Double montantGlobalRestant = situationFinanciere.getMontantGlobalRestant();
-                        situationFinanciere.setDossierMedical(d);
-                        situationFinanciere.setMontantGolbalePaye(montantGlobalPaye + montantPaye);
-                        situationFinanciere.setMontantGlobalRestant(montantGlobalRestant + resteAPaye);
-                        situationFinanciere.setDateCreation(LocalDate.now());
-                        situationFinanciere.addFacture(facture);
-                        d.setSituationFinanciere(situationFinanciere);
-                        facture.setSituationFinanciere(situationFinanciere);
-                        //save facture to file
-                        factureService.addFacture(facture);
-                        System.out.println(factureService.getAllFactures());
-                        dossierMedicalService.updateDossier(d);
-                        //save situation financiere to file
-
-
-                        //refreshContent();
-
-
+            try {
+                if (montantPaye.isNaN() || resteAPaye.isNaN() || total.isNaN()) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
                 }
-                } catch (StackOverflowError ignored){
-                    //refreshContent();
-                }
+                else{
+                    Consultation consultation1 = consultationService.getConsultationById(consultationId);
+                    Facture facture = new Facture(selectedStatut, resteAPaye, new SituationFinanciere(), montantPaye, LocalDate.now(), total, new Consultation(), selectedType);
+                    consultation1.addFacture(facture);
+                    facture.setConsultation(consultation1);
+                    consultationService.updateConsultation(consultation1);
+                    Patient patient = patientService.getPatientById(patientId);
+                    DossierMedical dossier = patient.getDossierMedical();
+                    DossierMedical d = dossierMedicalService.getDossierByNum(dossier.getNumeroDossier());
+                    //Situation financiere
+                    SituationFinanciere situationFinanciere = d.getSituationFinanciere();
+                    Double montantGlobalPaye = situationFinanciere.getMontantGolbalePaye();
+                    Double montantGlobalRestant = situationFinanciere.getMontantGlobalRestant();
+                    situationFinanciere.setDossierMedical(d);
+                    situationFinanciere.setMontantGolbalePaye(montantGlobalPaye + montantPaye);
+                    situationFinanciere.setMontantGlobalRestant(montantGlobalRestant + resteAPaye);
+                    situationFinanciere.setDateCreation(LocalDate.now());
+                    situationFinanciere.addFacture(facture);
+                    d.setSituationFinanciere(situationFinanciere);
+                    facture.setSituationFinanciere(situationFinanciere);
+                    //save facture to file
+                    factureService.addFacture(facture);
+                    System.out.println(factureService.getAllFactures());
+                    dossierMedicalService.updateDossier(d);
+                    //save situation financiere to file
+
+
+
+
+            }
+            } catch (StackOverflowError ignored){
+
             }
         });
         ArrayList<Facture> factures = factureService.getAllFactures();

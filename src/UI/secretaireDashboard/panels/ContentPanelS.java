@@ -290,7 +290,7 @@ public class ContentPanelS extends JPanel {
         hintPanel.add(hint);
 
         add(hintPanel, BorderLayout.NORTH);
-        add(recettePanel, BorderLayout.CENTER);
+        add(recettePanel, BorderLayout.SOUTH);
 
         selectionModel.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -338,17 +338,14 @@ public class ContentPanelS extends JPanel {
         ListSelectionModel selectionModel = patientTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    int selectedRow = patientTable.getSelectedRow();
+        selectionModel.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = patientTable.getSelectedRow();
 
-                    if (selectedRow != -1) {
-                        Patient selectedPatient = patients.get(selectedRow);
+                if (selectedRow != -1) {
+                    Patient selectedPatient = patients.get(selectedRow);
 
-                        updatePatientContent(selectedPatient);
-                    }
+                    updatePatientContent(selectedPatient);
                 }
             }
         });

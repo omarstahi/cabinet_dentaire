@@ -36,14 +36,12 @@ public class DentistDashboard extends JFrame {
         JLabel iconLabel = new JLabel(icon);
         iconLabel.setBounds(0, 0, 20, 20);
 
-        // Add text
         JLabel titleLabel = new JLabel("      Dashboard Title");
         titleLabel.setFont(new Font("Monospaced", Font.ITALIC, 30));
 
         topPanel.add(iconLabel, BorderLayout.WEST);
         topPanel.add(titleLabel, BorderLayout.CENTER);
 
-        // Add shadowed separator
         JSeparator separator = createShadowedSeparator();
         topPanel.add(separator, BorderLayout.SOUTH);
 
