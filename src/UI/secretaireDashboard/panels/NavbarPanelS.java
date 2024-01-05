@@ -18,7 +18,7 @@ public class NavbarPanelS extends JPanel {
         // Increase vertical spacing
         add(Box.createVerticalStrut(20));
 
-        JButton profileButton = new JButton("<html><font color='white'>Profile</font></html>", resizeIcon(new ImageIcon("src/Static/icons/profile.png"), 40, 40));
+        JButton profileButton = new JButton("<html><font color='white'>Profile</font></html>", resizeIcon(new ImageIcon("src/Static/icons/secretary.png"), 40, 40));
         profileButton.setPreferredSize(new Dimension(150, 40)); // Adjust the size as needed
         profileButton.setFont(Themes.DEFAULTFONT);
         JButton patientButton = new JButton("<html><font color='white'>Patients</font></html>", new ImageIcon("src/Static/icons/patient.png"));

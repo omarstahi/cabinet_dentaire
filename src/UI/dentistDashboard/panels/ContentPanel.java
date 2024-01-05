@@ -157,7 +157,8 @@ public class ContentPanel extends JPanel {
         JComboBox risqueField = new JComboBox(risqueItems);
 
 
-
+        JLabel hint = new JLabel("click on a row");
+        hint.setIcon(resizeIcon(new ImageIcon("src/Static/icons/hint.png"), 40, 40));
         JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>");
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
@@ -184,6 +185,7 @@ public class ContentPanel extends JPanel {
         formPanel.add(risqueField);
         formPanel.add(new JLabel()); // Empty label for spacing
         formPanel.add(submitButton);
+        formPanel.add(hint);
 
         patientPanel.add(formPanel);
 
@@ -406,6 +408,11 @@ public class ContentPanel extends JPanel {
         JButton factureButton = new JButton("<html><font color='white'>Facture</font></html>");
         factureButton.setFont(Themes.DEFAULTFONT);
         factureButton.setBackground(Themes.BUTTONCOLOR);
+        JLabel warning = new JLabel("submit consultation then");
+        JLabel warningRest = new JLabel("click on facture button");
+
+        warning.setIcon(resizeIcon(new ImageIcon("src/Static/icons/warning.png"), 30, 30));
+
 
         bottomPanel.add(acteLabel);
         bottomPanel.add(acteField);
@@ -421,8 +428,8 @@ public class ContentPanel extends JPanel {
         bottomPanel.add(noteField);
         bottomPanel.add(new JLabel());
         bottomPanel.add(submitButton);
-        bottomPanel.add(new JLabel());
-        bottomPanel.add(new JLabel());
+        bottomPanel.add(warning);
+        bottomPanel.add(warningRest);
         bottomPanel.add(new JLabel());
         bottomPanel.add(factureButton);
 
@@ -597,7 +604,7 @@ public class ContentPanel extends JPanel {
 
 
 
-    private Icon resizeIcon(ImageIcon icon, int width, int height) {
+    private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();
         Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImg);

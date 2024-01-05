@@ -12,6 +12,7 @@ import models.antecedantClasses.CategorieAntecedentMedicaux;
 import models.antecedantClasses.DossierMedical;
 import models.antecedantClasses.Risque;
 import models.finance.Facture;
+import models.finance.StatutPaiement;
 import models.finance.SituationFinanciere;
 import services.DossierMedicalService;
 import services.FactureService;
@@ -224,7 +225,7 @@ public class ContentPanelS extends JPanel {
                 }
             }
         });
-        displayPatients(dossierMedical);
+        displayPatients();
 
         revalidate();
         repaint();
@@ -236,7 +237,7 @@ public class ContentPanelS extends JPanel {
         setLayout(new BorderLayout());
 
         ArrayList<Facture> factures = factureService.getAllFactures();
-        String[] columnNames = {"ID facture", "Date", "Type de paiement", "Montant"};
+        String[] columnNames = {"ID facture", "Date", "Type de paiement","Statut de paiment", "Montant"};
         Object[][] data = new Object[factures.size()][columnNames.length];
 
         for (int i = 0; i < factures.size(); i++) {
@@ -244,7 +245,8 @@ public class ContentPanelS extends JPanel {
             data[i][0] = facture.getIdFacture();
             data[i][1] = facture.getDateFactureation();
             data[i][2] = facture.getTypePaiement();
-            data[i][3] = facture.getMontantTotal();
+            data[i][3] = facture.getStatutPaiement();
+            data[i][4] = facture.getMontantTotal();
         }
 
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
@@ -267,10 +269,12 @@ public class ContentPanelS extends JPanel {
         LocalDate currentDate = LocalDate.now();
 
         for (Facture facture : factures) {
-            if (facture.getDateFactureation().equals(currentDate)) recetteDeJour += facture.getMontantPaye();
-            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear())
+            if (facture.getDateFactureation().equals(currentDate) && facture.getStatutPaiement() == StatutPaiement.PAYE)
+                recetteDeJour += facture.getMontantPaye();
+            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAYE)
                 recetteDeMois += facture.getMontantPaye();
-            if (facture.getDateFactureation().getYear() == currentDate.getYear()) recetteDeAnnee += facture.getMontantPaye();
+            if (facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAYE)
+                recetteDeAnnee += facture.getMontantPaye();
         }
 
         JLabel recetteJourLabel = new JLabel("Recette de jour : " + recetteDeJour + "                ");
@@ -285,12 +289,25 @@ public class ContentPanelS extends JPanel {
 
         add(recettePanel, BorderLayout.SOUTH);
 
+        selectionModel.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = factureTable.getSelectedRow();
+
+                if (selectedRow != -1) {
+                    Object factureId = factureTable.getValueAt(selectedRow, 0);
+
+                    Facture selectedFacture = factureService.getFactureById(factureId.toString());
+
+                    updateFactureContent(selectedFacture);
+                }
+            }
+        });
         revalidate();
         repaint();
     }
 
 
-    public void displayPatients(DossierMedical dossierMedical) {
+    public void displayPatients() {
         //removeAll();
         //setLayout(new GridLayout(2,1));
 
@@ -341,7 +358,7 @@ public class ContentPanelS extends JPanel {
     }
 
 
-        private void updatePatientContent(Patient patient) {
+    private void updatePatientContent(Patient patient) {
             removeAll();
             setLayout(new GridLayout(1, 1));
 
@@ -439,9 +456,69 @@ public class ContentPanelS extends JPanel {
             repaint();
         }
 
-        // ... existing code ...
 
+    private void updateFactureContent(Facture facture) {
+        removeAll();
+        setLayout(new GridLayout(1, 1));
 
+        JPanel updatePanel = new JPanel(new GridLayout(1, 1));
+        JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 50));
+
+        JLabel montantPayeLabel = new JLabel("Montant paye:");
+        montantPayeLabel.setFont(Themes.DEFAULTFONT);
+        JTextField montantPayeField = new JTextField();
+
+        JLabel resteAPayeLabel = new JLabel("Reste a paye:");
+        resteAPayeLabel.setFont(Themes.DEFAULTFONT);
+        JTextField resteAPayeField = new JTextField();
+
+        JLabel totalLabel = new JLabel("Total:");
+        totalLabel.setFont(Themes.DEFAULTFONT);
+        JTextField totalField = new JTextField();
+
+        JLabel statutLabel = new JLabel("Statut paiement:");
+        statutLabel.setFont(Themes.DEFAULTFONT);
+        JComboBox<StatutPaiement> statutComboBox = new JComboBox<>(StatutPaiement.values());
+
+        montantPayeField.setText(facture.getMontantPaye().toString());
+        resteAPayeField.setText(facture.getMontantRestant().toString());
+        totalField.setText(facture.getMontantTotal().toString());
+
+        statutComboBox.setSelectedItem(facture.getStatutPaiement());
+
+        JButton updateButton = new JButton("<html><font color='white'>Update</font></html>");
+        updateButton.setFont(Themes.DEFAULTFONT);
+        updateButton.setBackground(Themes.BUTTONCOLOR);
+
+        formPanel.add(montantPayeLabel);
+        formPanel.add(montantPayeField);
+        formPanel.add(resteAPayeLabel);
+        formPanel.add(resteAPayeField);
+        formPanel.add(totalLabel);
+        formPanel.add(totalField);
+        formPanel.add(statutLabel);
+        formPanel.add(statutComboBox);
+        formPanel.add(new JLabel());
+        formPanel.add(updateButton);
+
+        updatePanel.add(formPanel);
+
+        add(updatePanel, BorderLayout.CENTER);
+
+        updateButton.addActionListener(e -> {
+            Double updatedMontantPaye = Double.parseDouble(montantPayeField.getText());
+            Double updatedResteAPaye = Double.parseDouble(resteAPayeField.getText());
+
+            facture.setMontantPaye(updatedMontantPaye);
+            facture.setMontantRestant(updatedResteAPaye);
+            facture.setStatutPaiement((StatutPaiement) statutComboBox.getSelectedItem());
+            factureService.updateFacture(facture);
+            caisseContent();
+        });
+
+        revalidate();
+        repaint();
+    }
 
     public void refreshContent() {
         removeAll();

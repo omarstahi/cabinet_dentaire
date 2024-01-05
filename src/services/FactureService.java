@@ -25,7 +25,7 @@ public class FactureService {
         return factureDao.findAll();
     }
 
-    public void updateConsultation(Facture updatedFacture) {
+    public void updateFacture(Facture updatedFacture) {
         factureDao.update(updatedFacture);
     }
 }
