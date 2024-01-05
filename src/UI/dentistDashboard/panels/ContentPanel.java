@@ -445,16 +445,15 @@ public class ContentPanel extends JPanel {
         });
 
         factureButton.addActionListener(e -> {
-            //Double prixPatient = Double.parseDouble(prixPatientField.getText());
-            //System.out.println(prixPatient);
+            Double prixPatient = Double.parseDouble(prixPatientField.getText());
             String consultationId = consultation.getIdConsultation();
-            factureContent(patientId, consultationId);
+            factureContent(patientId, consultationId, prixPatient);
         });
         revalidate();
         repaint();
     }
 
-    public void factureContent(String patientId, String consultationId){
+    public void factureContent(String patientId, String consultationId, Double prixPatient){
         removeAll();
         setLayout(new GridLayout(2,1));
         JPanel facturePanel = new JPanel(new GridLayout(1, 1));
@@ -470,7 +469,8 @@ public class ContentPanel extends JPanel {
 
         JLabel totalLabel = new JLabel("Total:");
         totalLabel.setFont(Themes.DEFAULTFONT);
-        JTextField totalField = new JTextField();
+        JLabel totalLabelValue = new JLabel(prixPatient.toString());
+        totalLabel.setFont(Themes.DEFAULTFONT);
 
         JLabel statutDeFactureLabel = new JLabel("Statut de payment:");
         statutDeFactureLabel.setFont(Themes.DEFAULTFONT);
@@ -497,7 +497,7 @@ public class ContentPanel extends JPanel {
         formPanel.add(resteAPayeLabel);
         formPanel.add(resteAPayeField);
         formPanel.add(totalLabel);
-        formPanel.add(totalField);
+        formPanel.add(totalLabelValue);
         formPanel.add(new JLabel());
         formPanel.add(submitButton);
 
@@ -509,13 +509,14 @@ public class ContentPanel extends JPanel {
             TypePaiement selectedType = (TypePaiement) typePayementField.getSelectedItem();
             Double montantPaye = Double.parseDouble(montantPayeField.getText());
             Double resteAPaye = Double.parseDouble(resteAPayeField.getText());
-            Double total = Double.parseDouble(totalField.getText());
+            Double total = prixPatient;
 
             try {
                 if (montantPaye.isNaN() || resteAPaye.isNaN() || total.isNaN()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all the fields", "Fields warning", JOptionPane.WARNING_MESSAGE);
-                }
-                else{
+                } else if (prixPatient != (montantPaye + resteAPaye)) {
+                    JOptionPane.showMessageDialog(null, "The sum of amount paid and remains to be paid should equal to total", "Fields warning", JOptionPane.WARNING_MESSAGE);
+                } else{
                     Consultation consultation1 = consultationService.getConsultationById(consultationId);
                     Facture facture = new Facture(selectedStatut, resteAPaye, montantPaye, LocalDate.now(), total, new Consultation(), selectedType);
                     consultation1.addFacture(facture);
