@@ -2,6 +2,8 @@ package UI.Login.Panels;
 import Static.Themes;
 import UI.dentistDashboard.DentistDashboard;
 import UI.secretaireDashboard.SecretaireDashboard;
+import models.Dentiste;
+import models.Secretaire;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +11,8 @@ import java.awt.*;
 public class LoginPanel extends JPanel {
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private Dentiste dentiste = new Dentiste();
+    private Secretaire secretaire = new Secretaire();
 
     public LoginPanel() {
         placeComponents();
@@ -21,13 +25,13 @@ public class LoginPanel extends JPanel {
         JLabel loginText = new JLabel("<html><font color='blue'>Login </font><font color='black'>your account</font></html>");
         loginText.setFont(Themes.DEFAULTFONT);
         topPanel.add(loginText);
-        topPanel.setBackground(Color.WHITE);  // Set background color
+        topPanel.setBackground(Color.WHITE);
 
         add(topPanel, BorderLayout.NORTH);
         // Center Panel for the form
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(null);
-        centerPanel.setBackground(Color.WHITE);  // Set background color
+        centerPanel.setBackground(Color.WHITE);
 
 
         JLabel userLabel = new JLabel("Username:");
@@ -51,21 +55,19 @@ public class LoginPanel extends JPanel {
         loginButton.setBackground(Themes.BUTTONCOLOR);
         centerPanel.add(loginButton);
 
-        // Add ActionListener for the login button
         loginButton.addActionListener(e -> {
             String username = usernameField.getText();
             char[] password = passwordField.getPassword();
 
-            if ("doctor".equals(username) && "doctor".equals(new String(password))) {
+            if (dentiste.getUsername().equals(username) && dentiste.getPassword().equals(new String(password))) {
                 new DentistDashboard();
-            } else if ("sec".equals(username) && "sec".
+            } else if (secretaire.getUsername().equals(username) && secretaire.getPassword().
                     equals(new String(password))) {
                 new SecretaireDashboard();
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid username or password. Try again.");
             }
 
-            // Clear the fields after login attempt
             usernameField.setText("");
             passwordField.setText("");
         });

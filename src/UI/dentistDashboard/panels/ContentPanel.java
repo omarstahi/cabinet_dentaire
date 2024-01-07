@@ -3,6 +3,7 @@ package UI.dentistDashboard.panels;
 import Database.dao.*;
 import Static.Themes;
 import UI.AlternatingRowColorRenderer;
+import models.Dentiste;
 import models.InterventionMedecin;
 import models.Mutuelle;
 import models.Patient;
@@ -20,14 +21,9 @@ import models.finance.TypePaiement;
 import services.*;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -44,6 +40,7 @@ public class ContentPanel extends JPanel {
     private Patient newPatient;
     private Consultation consultation = new Consultation();
     private DossierMedical dossierMedical = new DossierMedical();
+    private Dentiste dentiste = new Dentiste();
 
     public ContentPanel(PatientDao patientDao, DossierDao dossierDao, ConsultationDao consultationDao, FactureDao factureDao) {
         setLayout(null);
@@ -62,31 +59,45 @@ public class ContentPanel extends JPanel {
         removeAll();
         setLayout(null);
         //icons
+        JLabel fullName = new JLabel(resizeIcon(new ImageIcon("src/Static/icons/dentiste.png"), 50, 50));
         JLabel adresse = new JLabel(new ImageIcon("src/Static/icons/adresse.png"));
         JLabel phone = new JLabel(new ImageIcon("src/Static/icons/phone.png"));
         JLabel email = new JLabel(new ImageIcon("src/Static/icons/email.png"));
+        JLabel specialite = new JLabel(resizeIcon(new ImageIcon("src/Static/icons/specialite.png"), 50, 50));
 
         //labels
-        JLabel adresseLabel = new JLabel("diyar");
-        JLabel phoneLabel = new JLabel("06040483265");
-        JLabel emailLabel = new JLabel("test@gmail.com");
+        JLabel nameLabel = new JLabel(dentiste.getNom() + " " + dentiste.getPrenom());
+        JLabel adresseLabel = new JLabel(dentiste.getAdresse());
+        JLabel phoneLabel = new JLabel(dentiste.getTelephone());
+        JLabel emailLabel = new JLabel(dentiste.getEmail());
+        JLabel specialiteLabel = new JLabel(dentiste.getSpecialite().toString());
+
 
         //style
+        nameLabel.setFont(Themes.DEFAULTFONT);
         adresseLabel.setFont(Themes.DEFAULTFONT);
         phoneLabel.setFont(Themes.DEFAULTFONT);
         emailLabel.setFont(Themes.DEFAULTFONT);
-        adresse.setBounds(50, 80, 50, 50);
-        adresseLabel.setBounds(120, 80, 150, 50);
-        phone.setBounds(50, 180, 50, 50);
-        phoneLabel.setBounds(120, 180, 150, 50);
-        email.setBounds(50, 280, 50, 50);
-        emailLabel.setBounds(120, 280, 250, 50);
+        fullName.setBounds(10, 50, 150, 50);
+        nameLabel.setBounds(120, 50, 150, 50);
+        adresse.setBounds(70, 180, 50, 50);
+        adresseLabel.setBounds(140, 180, 150, 50);
+        phone.setBounds(70, 280, 50, 50);
+        phoneLabel.setBounds(140, 280, 150, 50);
+        email.setBounds(70, 380, 50, 50);
+        emailLabel.setBounds(140, 380, 250, 50);
+        specialite.setBounds(70, 480, 50, 50);
+        specialiteLabel.setBounds(140, 480, 250, 50);
+        add(fullName);
+        add(nameLabel);
         add(adresse);
         add(adresseLabel);
         add(phone);
         add(phoneLabel);
         add(email);
         add(emailLabel);
+        add(specialite);
+        add(specialiteLabel);
         revalidate();
         repaint();
     }

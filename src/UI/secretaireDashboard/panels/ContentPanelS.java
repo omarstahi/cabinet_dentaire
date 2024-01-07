@@ -7,6 +7,7 @@ import Static.Themes;
 import UI.AlternatingRowColorRenderer;
 import models.Mutuelle;
 import models.Patient;
+import models.Secretaire;
 import models.antecedantClasses.AntecedantMedical;
 import models.antecedantClasses.CategorieAntecedentMedicaux;
 import models.antecedantClasses.DossierMedical;
@@ -38,6 +39,7 @@ public class ContentPanelS extends JPanel {
     FactureService factureService;
     private Patient newPatient;
     private DossierMedical dossierMedical = new DossierMedical();
+    private Secretaire secretaire = new Secretaire();
 
     public ContentPanelS(PatientDao patientDao, DossierDao dossierDao, FactureDao factureDao) {
         setLayout(null);
@@ -54,25 +56,33 @@ public class ContentPanelS extends JPanel {
         removeAll();
         setLayout(null);
         //icons
+        JLabel fullName = new JLabel(resizeIcon(new ImageIcon("src/Static/icons/secretary.png"), 50, 50));
         JLabel adresse = new JLabel(new ImageIcon("src/Static/icons/adresse.png"));
         JLabel phone = new JLabel(new ImageIcon("src/Static/icons/phone.png"));
         JLabel email = new JLabel(new ImageIcon("src/Static/icons/email.png"));
 
         //labels
-        JLabel adresseLabel = new JLabel("diyar");
-        JLabel phoneLabel = new JLabel("06040483265");
-        JLabel emailLabel = new JLabel("test@gmail.com");
+        JLabel nameLabel = new JLabel(secretaire.getNom() + " " + secretaire.getPrenom());
+        JLabel adresseLabel = new JLabel(secretaire.getAdresse());
+        JLabel phoneLabel = new JLabel(secretaire.getTelephone());
+        JLabel emailLabel = new JLabel(secretaire.getEmail());
+
 
         //style
+        nameLabel.setFont(Themes.DEFAULTFONT);
         adresseLabel.setFont(Themes.DEFAULTFONT);
         phoneLabel.setFont(Themes.DEFAULTFONT);
         emailLabel.setFont(Themes.DEFAULTFONT);
-        adresse.setBounds(50, 80, 50, 50);
-        adresseLabel.setBounds(120, 80, 150, 50);
-        phone.setBounds(50, 180, 50, 50);
-        phoneLabel.setBounds(120, 180, 150, 50);
-        email.setBounds(50, 280, 50, 50);
-        emailLabel.setBounds(120, 280, 250, 50);
+        fullName.setBounds(10, 50, 150, 50);
+        nameLabel.setBounds(120, 50, 150, 50);
+        adresse.setBounds(70, 180, 50, 50);
+        adresseLabel.setBounds(140, 180, 150, 50);
+        phone.setBounds(70, 280, 50, 50);
+        phoneLabel.setBounds(140, 280, 150, 50);
+        email.setBounds(70, 380, 50, 50);
+        emailLabel.setBounds(140, 380, 250, 50);
+        add(fullName);
+        add(nameLabel);
         add(adresse);
         add(adresseLabel);
         add(phone);
@@ -82,6 +92,7 @@ public class ContentPanelS extends JPanel {
         revalidate();
         repaint();
     }
+
 
     public void patientContent() {
         removeAll();

@@ -7,20 +7,26 @@ public class Secretaire extends User{
 
     private  Double SalaireDeBase;
     private LocalDate dateDeRetoure;
-    private Assurance assurance;
-    private StatusEmploye statusEmploye;
     private Double prime;
+
+    public Secretaire(){
+        setNom("Wael");
+        setPrenom("Abdullah");
+        setAdresse("Sala, Tabrekt");
+        setTelephone("0672641935");
+        setEmail("secretaire@gmail.com");
+        setUsername("sec");
+        setPassword("sec");
+    }
 
     public Secretaire(String nom, String prenom, String adresse, String telephone, String email, String cin, String username, String password) {
         super(nom, prenom, adresse, telephone, email, cin, username, password);
     }
 
-    public Secretaire(String nom, String prenom, String adresse, String telephone, String email, String cin, String username, String password, Double salaireDeBase, LocalDate dateDeRetoure, Assurance assurance, StatusEmploye statusEmploye, Double prime) {
+    public Secretaire(String nom, String prenom, String adresse, String telephone, String email, String cin, String username, String password, Double salaireDeBase, Double prime) {
         super(nom, prenom, adresse, telephone, email, cin, username, password);
         SalaireDeBase = salaireDeBase;
         this.dateDeRetoure = dateDeRetoure;
-        this.assurance = assurance;
-        this.statusEmploye = statusEmploye;
         this.prime = prime;
     }
 
@@ -40,22 +46,6 @@ public class Secretaire extends User{
         this.dateDeRetoure = dateDeRetoure;
     }
 
-    public Assurance getAssurance() {
-        return assurance;
-    }
-
-    public void setAssurance(Assurance assurance) {
-        this.assurance = assurance;
-    }
-
-    public StatusEmploye getStatusEmploye() {
-        return statusEmploye;
-    }
-
-    public void setStatusEmploye(StatusEmploye statusEmploye) {
-        this.statusEmploye = statusEmploye;
-    }
-
     public Double getPrime() {
         return prime;
     }
@@ -69,11 +59,11 @@ public class Secretaire extends User{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Secretaire that = (Secretaire) o;
-        return Objects.equals(SalaireDeBase, that.SalaireDeBase) && Objects.equals(dateDeRetoure, that.dateDeRetoure) && assurance == that.assurance && statusEmploye == that.statusEmploye && Objects.equals(prime, that.prime);
+        return Objects.equals(SalaireDeBase, that.SalaireDeBase) && Objects.equals(dateDeRetoure, that.dateDeRetoure) && Objects.equals(prime, that.prime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(SalaireDeBase, dateDeRetoure, assurance, statusEmploye, prime);
+        return Objects.hash(SalaireDeBase, dateDeRetoure, prime);
     }
 }
