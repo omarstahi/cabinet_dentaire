@@ -27,7 +27,7 @@ public class DossierMedical implements Serializable {
         this.numeroDossier = numeroDossier;
     }
 
-    public List<Consultation> getConsultations() {
+    public ArrayList<Consultation> getConsultations() {
         return Consultations;
     }
 

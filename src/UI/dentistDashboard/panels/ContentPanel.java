@@ -137,13 +137,13 @@ public class ContentPanel extends JPanel {
         birthLabel.setFont(Themes.DEFAULTFONT);
         JTextField birthField = new JTextField();
 
-        JLabel mutuelleLabel = new JLabel("Mutuelle:");
+        JLabel mutuelleLabel = new JLabel("Mutual:");
         mutuelleLabel.setFont(Themes.DEFAULTFONT);
 
         JLabel antecedantLabel = new JLabel("Antecedant medical:");
         antecedantLabel.setFont(Themes.DEFAULTFONT);
 
-        JLabel risqueLabel = new JLabel("Risque:");
+        JLabel risqueLabel = new JLabel("Risk:");
         risqueLabel.setFont(Themes.DEFAULTFONT);
 
         Mutuelle[] mutuelleItems = {Mutuelle.CIMR, Mutuelle.CNAM, Mutuelle.CNOPS, Mutuelle.CNSS};
@@ -153,7 +153,7 @@ public class ContentPanel extends JPanel {
                 CategorieAntecedentMedicaux.MALADIE_HEREDITAIRE,
                 CategorieAntecedentMedicaux.AUTRE
         };
-        Risque[] risqueItems = {Risque.FAIBLE, Risque.MOYEN, Risque.ELEVE, Risque.INCONNU};
+        Risque[] risqueItems = {Risque.LOW, Risque.AVERAGE, Risque.HIGH, Risque.UNKNOWN};
         JComboBox mutuelleField = new JComboBox(mutuelleItems);
         JComboBox antecedantField = new JComboBox(categorieAntecedentMedicauxesItems);
         JComboBox risqueField = new JComboBox(risqueItems);
@@ -275,17 +275,17 @@ public class ContentPanel extends JPanel {
         LocalDate currentDate = LocalDate.now();
 
         for (Facture facture : factures) {
-            if (facture.getDateFactureation().equals(currentDate) && facture.getStatutPaiement() == StatutPaiement.PAYE)
+            if (facture.getDateFactureation().equals(currentDate) && facture.getStatutPaiement() == StatutPaiement.PAID)
                 recetteDeJour += facture.getMontantPaye();
-            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAYE)
+            if (facture.getDateFactureation().getMonth() == currentDate.getMonth() && facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAID)
                 recetteDeMois += facture.getMontantPaye();
-            if (facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAYE)
+            if (facture.getDateFactureation().getYear() == currentDate.getYear() && facture.getStatutPaiement() == StatutPaiement.PAID)
                 recetteDeAnnee += facture.getMontantPaye();
         }
 
-        JLabel recetteJourLabel = new JLabel("Recette de jour : " + recetteDeJour + "                ");
-        JLabel recetteMoisLabel = new JLabel("Recette de mois : " + recetteDeMois + "                ");
-        JLabel recetteAnneeLabel = new JLabel("Recette d'année : " + recetteDeAnnee);
+        JLabel recetteJourLabel = new JLabel("Recipe of the day : " + recetteDeJour + "                ");
+        JLabel recetteMoisLabel = new JLabel("Recipe of the month : " + recetteDeMois + "                ");
+        JLabel recetteAnneeLabel = new JLabel("Recipe of the year : " + recetteDeAnnee);
 
         JPanel recettePanel = new JPanel();
         recettePanel.setLayout(new FlowLayout());
@@ -351,15 +351,15 @@ public class ContentPanel extends JPanel {
         topPanel.add(imageLabel);
 
         // Form
-        JLabel dentLabel = new JLabel("N-Dent:");
+        JLabel dentLabel = new JLabel("N-tooth:");
         dentLabel.setFont(Themes.DEFAULTFONT);
         JTextField dentField = new JTextField();
 
-        JLabel prixBaseLabel = new JLabel("Prix de base:");
+        JLabel prixBaseLabel = new JLabel("Starting price:");
         prixBaseLabel.setFont(Themes.DEFAULTFONT);
         JTextField prixBaseField = new JTextField();
 
-        JLabel prixPatientLabel = new JLabel("Prix de patient:");
+        JLabel prixPatientLabel = new JLabel("patient price:");
         prixPatientLabel.setFont(Themes.DEFAULTFONT);
         JTextField prixPatientField = new JTextField();
 
@@ -367,7 +367,7 @@ public class ContentPanel extends JPanel {
         noteLabel.setFont(Themes.DEFAULTFONT);
         JTextArea noteField = new JTextArea();
 
-        JLabel acteLabel = new JLabel("Acte:");
+        JLabel acteLabel = new JLabel("Act:");
         acteLabel.setFont(Themes.DEFAULTFONT);
 
         CategorieActe[] acteItems = {
@@ -386,9 +386,9 @@ public class ContentPanel extends JPanel {
         typeConsultationLabel.setFont(Themes.DEFAULTFONT);
 
         TypeConsultation[] typeConsultationItems = {
-                TypeConsultation.CONSULTATION_GENERAL,
-                TypeConsultation.SUIVI,
-                TypeConsultation.URGENCE
+                TypeConsultation.GENERAL_CONSULTATION,
+                TypeConsultation.FOLLOW_UP,
+                TypeConsultation.EMERGENCY
         };
         JComboBox typeConsultationField = new JComboBox(typeConsultationItems);
 
@@ -396,7 +396,7 @@ public class ContentPanel extends JPanel {
         JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>", resizeIcon(new ImageIcon("src/Static/icons/submit.png"), 30, 30));
         submitButton.setFont(Themes.DEFAULTFONT);
         submitButton.setBackground(Themes.BUTTONCOLOR);
-        JButton factureButton = new JButton("<html><font color='white'>Facture</font></html>", resizeIcon(new ImageIcon("src/Static/icons/facture.png"), 30, 30));
+        JButton factureButton = new JButton("<html><font color='white'>Billing</font></html>", resizeIcon(new ImageIcon("src/Static/icons/facture.png"), 30, 30));
         factureButton.setFont(Themes.DEFAULTFONT);
         factureButton.setBackground(Themes.BUTTONCOLOR);
         JLabel warning = new JLabel("submit consultation then");
@@ -470,11 +470,11 @@ public class ContentPanel extends JPanel {
         JPanel facturePanel = new JPanel(new GridLayout(1, 1));
 
         JPanel formPanel = new JPanel(new GridLayout(0, 4, 15, 90));
-        JLabel montantPayeLabel = new JLabel("Montant paye:");
+        JLabel montantPayeLabel = new JLabel("Amount paid:");
         montantPayeLabel.setFont(Themes.DEFAULTFONT);
         JTextField montantPayeField = new JTextField();
 
-        JLabel resteAPayeLabel = new JLabel("Reste a paye:");
+        JLabel resteAPayeLabel = new JLabel("Stay paid:");
         resteAPayeLabel.setFont(Themes.DEFAULTFONT);
         JTextField resteAPayeField = new JTextField();
 
@@ -483,16 +483,16 @@ public class ContentPanel extends JPanel {
         JLabel totalLabelValue = new JLabel(prixPatient.toString());
         totalLabel.setFont(Themes.DEFAULTFONT);
 
-        JLabel statutDeFactureLabel = new JLabel("Statut de payment:");
+        JLabel statutDeFactureLabel = new JLabel("Payment status:");
         statutDeFactureLabel.setFont(Themes.DEFAULTFONT);
 
-        JLabel typePayementLabel = new JLabel("Type de payment:");
+        JLabel typePayementLabel = new JLabel("Payment type:");
         typePayementLabel.setFont(Themes.DEFAULTFONT);
 
-        StatutPaiement[] statutItems = {StatutPaiement.IMPAYE, StatutPaiement.EN_ATTENTTE, StatutPaiement.PAYE};
+        StatutPaiement[] statutItems = {StatutPaiement.UNPAID, StatutPaiement.WAITING, StatutPaiement.PAID};
         JComboBox statutField = new JComboBox(statutItems);
 
-        TypePaiement[] typePayementItems = {TypePaiement.CARTE_CREDIT, TypePaiement.CHEQUE, TypePaiement.ESPECE, TypePaiement.VIREMENT, TypePaiement.AUTRE};
+        TypePaiement[] typePayementItems = {TypePaiement.CREDIT_CARD, TypePaiement.CHECK, TypePaiement.CASH, TypePaiement.TRANSFER, TypePaiement.OTHER};
         JComboBox typePayementField = new JComboBox(typePayementItems);
 
         JButton submitButton = new JButton("<html><font color='white'>Submit</font></html>", resizeIcon(new ImageIcon("src/Static/icons/submit.png"), 30, 30));

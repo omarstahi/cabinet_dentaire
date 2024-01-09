@@ -34,7 +34,7 @@ public class SecretaireDashboard extends JFrame {
         iconLabel.setBounds(0, 0, 20, 20);
 
         // Add text
-        JLabel titleLabel = new JLabel("      Dashboard Title");
+        JLabel titleLabel = new JLabel("      Dental desk");
         titleLabel.setFont(new Font("Monospaced", Font.ITALIC, 30));
 
         topPanel.add(iconLabel, BorderLayout.WEST);
@@ -52,7 +52,7 @@ public class SecretaireDashboard extends JFrame {
 
         add(mainPanel);
 
-        setLocationRelativeTo(null); // Center the JFrame
+        setLocationRelativeTo(null);
         setVisible(true);
 
     }

@@ -8,8 +8,6 @@ public enum CategorieAntecedentMedicaux{
     ALLERGIE;
     private Risque risqueAssocie;
 
-    private String description;
-
     public Risque getRisqueAssocie() {
         return risqueAssocie;
     }
@@ -18,11 +16,4 @@ public enum CategorieAntecedentMedicaux{
         this.risqueAssocie = risqueAssocie;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

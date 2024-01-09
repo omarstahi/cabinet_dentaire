@@ -1,7 +1,7 @@
 package models.consultation;
 
 public enum TypeConsultation {
-    CONSULTATION_GENERAL,
-    SUIVI,
-    URGENCE
+    GENERAL_CONSULTATION,
+    FOLLOW_UP,
+    EMERGENCY
 }
