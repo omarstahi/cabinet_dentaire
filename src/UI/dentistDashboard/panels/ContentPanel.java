@@ -2,7 +2,7 @@ package UI.dentistDashboard.panels;
 
 import Database.dao.*;
 import Static.Themes;
-import UI.AlternatingRowColorRenderer;
+import UI.CustomFontRenderer;
 import models.Dentiste;
 import models.InterventionMedecin;
 import models.Mutuelle;
@@ -258,11 +258,12 @@ public class ContentPanel extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
         JTable factureTable = new JTable(tableModel);
-        factureTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
         JTableHeader header = factureTable.getTableHeader();
         header.setBackground(Themes.BUTTONCOLOR);
         header.setForeground(Color.WHITE);
-
+        factureTable.setRowHeight(50);
+        header.setFont(Themes.DEFAULTFONT);
+        factureTable.setDefaultRenderer(Object.class, new CustomFontRenderer());
         JScrollPane tableScrollPane = new JScrollPane(factureTable);
         add(tableScrollPane, BorderLayout.CENTER);
 
@@ -319,12 +320,13 @@ public class ContentPanel extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
         JTable patientTable = new JTable(tableModel);
-        patientTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
         JTableHeader header = patientTable.getTableHeader();
         header.setBackground(Themes.BUTTONCOLOR);
         header.setForeground(Color.WHITE);
         JScrollPane tableScrollPane = new JScrollPane(patientTable);
-
+        patientTable.setRowHeight(50);
+        patientTable.setDefaultRenderer(Object.class, new CustomFontRenderer());
+        header.setFont(Themes.DEFAULTFONT);
         add(tableScrollPane, BorderLayout.CENTER);
         ListSelectionModel selectionModel = patientTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -558,7 +560,6 @@ public class ContentPanel extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
         JTable factureTable = new JTable(tableModel);
-        factureTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
         JTableHeader header = factureTable.getTableHeader();
         header.setBackground(Themes.BUTTONCOLOR);
         header.setForeground(Color.WHITE);

@@ -4,7 +4,7 @@ import Database.dao.DossierDao;
 import Database.dao.FactureDao;
 import Database.dao.PatientDao;
 import Static.Themes;
-import UI.AlternatingRowColorRenderer;
+import UI.CustomFontRenderer;
 import models.Mutuelle;
 import models.Patient;
 import models.Secretaire;
@@ -19,13 +19,9 @@ import services.FactureService;
 import services.PatientService;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -250,8 +246,10 @@ public class ContentPanelS extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
         JTable factureTable = new JTable(tableModel);
-        factureTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
         JTableHeader header = factureTable.getTableHeader();
+        factureTable.setRowHeight(50);
+        factureTable.setDefaultRenderer(Object.class, new CustomFontRenderer());
+        header.setFont(Themes.DEFAULTFONT);
         header.setBackground(Themes.BUTTONCOLOR);
         header.setForeground(Color.WHITE);
 
@@ -328,12 +326,13 @@ public class ContentPanelS extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
         JTable patientTable = new JTable(tableModel);
-        patientTable.setDefaultRenderer(Object.class, new AlternatingRowColorRenderer());
         JTableHeader header = patientTable.getTableHeader();
         header.setBackground(Themes.BUTTONCOLOR);
         header.setForeground(Color.WHITE);
         JScrollPane tableScrollPane = new JScrollPane(patientTable);
-
+        patientTable.setRowHeight(50);
+        patientTable.setDefaultRenderer(Object.class, new CustomFontRenderer());
+        header.setFont(Themes.DEFAULTFONT);
         add(tableScrollPane, BorderLayout.CENTER);
         ListSelectionModel selectionModel = patientTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
