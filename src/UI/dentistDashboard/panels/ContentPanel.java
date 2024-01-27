@@ -244,7 +244,7 @@ public class ContentPanel extends JPanel {
         setLayout(new BorderLayout());
 
         ArrayList<Facture> factures = factureService.getAllFactures();
-        String[] columnNames = {"ID facture", "Date", "Type de paiement", "Montant"};
+        String[] columnNames = {"ID facture", "Date", "Type de paiement","Statut de paiment", "Montant"};
         Object[][] data = new Object[factures.size()][columnNames.length];
 
         for (int i = 0; i < factures.size(); i++) {
@@ -252,18 +252,20 @@ public class ContentPanel extends JPanel {
             data[i][0] = facture.getIdFacture();
             data[i][1] = facture.getDateFactureation();
             data[i][2] = facture.getTypePaiement();
-            data[i][3] = facture.getMontantTotal();
+            data[i][3] = facture.getStatutPaiement();
+            data[i][4] = facture.getMontantTotal();
         }
 
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
         JTable factureTable = new JTable(tableModel);
         JTableHeader header = factureTable.getTableHeader();
+        factureTable.setRowHeight(50);
+        factureTable.setDefaultRenderer(Object.class, new CustomFontRenderer());
+        header.setFont(Themes.DEFAULTFONT);
         header.setBackground(Themes.BUTTONCOLOR);
         header.setForeground(Color.WHITE);
-        factureTable.setRowHeight(50);
-        header.setFont(Themes.DEFAULTFONT);
-        factureTable.setDefaultRenderer(Object.class, new CustomFontRenderer());
+
         JScrollPane tableScrollPane = new JScrollPane(factureTable);
         add(tableScrollPane, BorderLayout.CENTER);
 
@@ -293,9 +295,27 @@ public class ContentPanel extends JPanel {
         recettePanel.add(recetteJourLabel);
         recettePanel.add(recetteMoisLabel);
         recettePanel.add(recetteAnneeLabel);
+        JLabel hint = new JLabel("Hint : click on a row to update it");
+        hint.setIcon(resizeIcon(new ImageIcon("src/Static/icons/hint.png"), 40, 40));
+        JPanel hintPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        hintPanel.add(hint);
 
+        add(hintPanel, BorderLayout.NORTH);
         add(recettePanel, BorderLayout.SOUTH);
 
+        selectionModel.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = factureTable.getSelectedRow();
+
+                if (selectedRow != -1) {
+                    Object factureId = factureTable.getValueAt(selectedRow, 0);
+
+                    Facture selectedFacture = factureService.getFactureById(factureId.toString());
+
+                    updateFactureContent(selectedFacture);
+                }
+            }
+        });
         revalidate();
         repaint();
     }
@@ -569,6 +589,72 @@ public class ContentPanel extends JPanel {
 
         ListSelectionModel selectionModel = factureTable.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        revalidate();
+        repaint();
+    }
+
+    private void updateFactureContent(Facture facture) {
+        removeAll();
+        setLayout(new GridLayout(1, 1));
+
+        JPanel updatePanel = new JPanel(new GridLayout(1, 1));
+        JPanel formPanel = new JPanel(new GridLayout(0, 2, 5, 50));
+
+        JLabel montantPayeLabel = new JLabel("Amount paid:");
+        montantPayeLabel.setFont(Themes.DEFAULTFONT);
+        JTextField montantPayeField = new JTextField();
+
+        JLabel resteAPayeLabel = new JLabel("Stay paid:");
+        resteAPayeLabel.setFont(Themes.DEFAULTFONT);
+        JTextField resteAPayeField = new JTextField();
+
+        JLabel totalLabel = new JLabel("Total:");
+        totalLabel.setFont(Themes.DEFAULTFONT);
+        JLabel totalField = new JLabel();
+
+        JLabel statutLabel = new JLabel("Payment status:");
+        statutLabel.setFont(Themes.DEFAULTFONT);
+        JComboBox<StatutPaiement> statutComboBox = new JComboBox<>(StatutPaiement.values());
+
+        montantPayeField.setText(facture.getMontantPaye().toString());
+        resteAPayeField.setText(facture.getMontantRestant().toString());
+        totalField.setText(facture.getMontantTotal().toString());
+
+        statutComboBox.setSelectedItem(facture.getStatutPaiement());
+        JButton updateButton = new JButton("<html><font color='white'>Update</font></html>", resizeIcon(new ImageIcon("src/Static/icons/update.png"), 30, 30));
+        updateButton.setFont(Themes.DEFAULTFONT);
+        updateButton.setBackground(Themes.BUTTONCOLOR);
+
+        formPanel.add(new JLabel());
+        formPanel.add(new JLabel());
+        formPanel.add(montantPayeLabel);
+        formPanel.add(montantPayeField);
+        formPanel.add(resteAPayeLabel);
+        formPanel.add(resteAPayeField);
+        formPanel.add(totalLabel);
+        formPanel.add(totalField);
+        formPanel.add(statutLabel);
+        formPanel.add(statutComboBox);
+        formPanel.add(new JLabel());
+        formPanel.add(updateButton);
+        formPanel.add(new JLabel());
+        formPanel.add(new JLabel());
+
+        updatePanel.add(formPanel);
+
+        add(updatePanel, BorderLayout.CENTER);
+
+        updateButton.addActionListener(e -> {
+            Double updatedMontantPaye = Double.parseDouble(montantPayeField.getText());
+            Double updatedResteAPaye = Double.parseDouble(resteAPayeField.getText());
+
+            facture.setMontantPaye(updatedMontantPaye);
+            facture.setMontantRestant(updatedResteAPaye);
+            facture.setStatutPaiement((StatutPaiement) statutComboBox.getSelectedItem());
+            factureService.updateFacture(facture);
+            caisseContent();
+        });
+
         revalidate();
         repaint();
     }
