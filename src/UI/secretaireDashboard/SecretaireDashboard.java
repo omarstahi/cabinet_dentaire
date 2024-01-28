@@ -66,6 +66,6 @@ public class SecretaireDashboard extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new UI.dentistDashboard.DentistDashboard());
+        SwingUtilities.invokeLater(() -> new UI.secretaireDashboard.SecretaireDashboard());
     }
 }
